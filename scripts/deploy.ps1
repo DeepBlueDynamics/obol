@@ -115,7 +115,7 @@ if ($Target -eq "cloudrun" -or $Target -eq "prod") {
         --project $Project `
         --allow-unauthenticated `
         --port 8080 `
-        --set-env-vars "AUTH_SERVICE_URL=https://auth.nuts.services,JWKS_URL=https://auth.nuts.services/.well-known/jwks.json,GCS_BUCKET_NAME=$GcsBucket,GCP_PROJECT=$Project,ENVIRONMENT=production,HOST=0.0.0.0,PORT=8080,DISABLE_AUTH=false,DEPLOYED_SHA=$sha"
+        --set-env-vars "AUTH_SERVICE_URL=https://auth.nuts.services,JWKS_URL=https://auth.nuts.services/.well-known/jwks.json,GCS_BUCKET_NAME=$GcsBucket,GCP_PROJECT=$Project,ENVIRONMENT=production,HOST=0.0.0.0,DISABLE_AUTH=false,DEPLOYED_SHA=$sha"
 
     Write-Host "Checking Cloud Run revision status..." -ForegroundColor Cyan
     $serviceUrl = & gcloud run services describe $Service `
