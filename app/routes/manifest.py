@@ -1,13 +1,18 @@
+from pathlib import Path
 from fastapi import APIRouter
-from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from ..config import settings
 from ..models import AhpManifest, AhpKeys, AhpGatewayEndpoints
 
 router = APIRouter(tags=["manifest"])
 
-@router.get("/", include_in_schema=False)
+HTML_PATH = Path(__file__).parent.parent / "static" / "index.html"
+
+@router.get("/", response_class=HTMLResponse, include_in_schema=False)
 async def root_index():
-    """Redirect root to interactive API documentation."""
+    """Serve the Obol marketing landing page and coordination dashboard."""
+    if HTML_PATH.exists():
+        return HTMLResponse(content=HTML_PATH.read_text(encoding="utf-8"))
     return RedirectResponse(url="/docs")
 
 # Gateway public principal key (ed25519)
