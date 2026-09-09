@@ -1,0 +1,2636 @@
+
+<!DOCTYPE html>
+
+
+
+
+
+
+
+<html data-bs-theme="auto" lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>
+            
+                draft-campbell-agentic-market-00
+            
+        </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://static.ietf.org/fonts/inter/import.css" rel="stylesheet">
+        <link href="https://static.ietf.org/fonts/noto-sans-mono/import.css" rel="stylesheet">
+        
+            <link rel="stylesheet" href="https://static.ietf.org/dt/12.74.0/ietf/css/document_html_referenced.css">
+            
+            <script type="module" crossorigin="" src="https://static.ietf.org/dt/12.74.0/assets/embedded-fe6c83cf.js"></script>
+<link href="https://static.ietf.org/dt/12.74.0/assets/create-pinia-singleton-608c2f69.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://static.ietf.org/dt/12.74.0/assets/Scrollbar-8f078505.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+            <script src="https://static.ietf.org/dt/12.74.0/ietf/js/document_html.js"></script>
+            <script src="https://static.ietf.org/dt/12.74.0/ietf/js/theme.js"></script>
+        
+        <link rel="alternate" type="application/atom+xml" title="Document changes" href="/feed/document-changes/draft-campbell-agentic-market/">
+        <meta name="description"
+            
+                content="Agentic Hypercall Protocol (AHP): Tool Invocation, Blind Settlement, and Portable Reputation over HTTP (Internet-Draft, 2026)"
+            >
+        
+
+<link rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://static.ietf.org/dt/12.74.0/ietf/images/ietf-logo-nor-180.png">
+<link rel="icon"
+      sizes="32x32"
+      href="https://static.ietf.org/dt/12.74.0/ietf/images/ietf-logo-nor-32.png">
+<link rel="icon"
+      sizes="16x16"
+      href="https://static.ietf.org/dt/12.74.0/ietf/images/ietf-logo-nor-16.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="mask-icon"
+      href="https://static.ietf.org/dt/12.74.0/ietf/images/ietf-logo-nor-mask.svg"
+      color="#ffffff">
+<meta name="msapplication-TileColor"
+      content="#ffffff">
+<meta name="theme-color"
+      content="#ffffff">
+        
+
+
+
+
+<meta property="og:title" content="Agentic Hypercall Protocol (AHP): Tool Invocation, Blind Settlement, and Portable Reputation over HTTP">
+<meta property="og:url" content="https://datatracker.ietf.org/doc/html/draft-campbell-agentic-market-00">
+
+
+<link rel="canonical" href="https://datatracker.ietf.org/doc/html/draft-campbell-agentic-market-00">
+
+<meta property="og:site_name" content="IETF Datatracker">
+<meta property="og:description" content="This document specifies the Agentic Hypercall Protocol (AHP), a minimal convention for automated software agents to discover, invoke, pay for, and rate tools over plain HTTP. It replaces draft-campbell- agentic-http-00 and extends it in three directions. First, it formalizes the HTTP 402 (Payment Required) status code as a native economic layer with pluggable payment rails (Lightning L402, Cashu ecash, and prepaid balances). Second, it specifies a blind relay -- the Gateway -- through which a consumer and a provider can transact end-to-end encrypted: the relay verifies identity, settles payment, and forwards sealed payloads it cannot read. Third, it specifies signed receipts, settlements, and rating attestations that let reputation be weighted by money actually settled rather than by tokens or votes, and that ride with a provider&#x27;s key rather than with any single relay. The result is an open market in which agents can buy compute, information, and services from one another without an SDK, a walled garden, or a native token.">
+<meta property="og:type" content="article">
+
+<meta property="article:section" content="Individual Internet-Draft">
+
+<meta property="article:author" content="Kord Campbell">
+
+
+
+        
+        <style>
+            
+            .diff-form .select2-selection__rendered {
+                direction: rtl;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <noscript><iframe class="status" title="Site status" src="/status/latest"></iframe></noscript>
+<div class="vue-embed" data-component="Status"></div>
+        <div class="btn-toolbar sidebar-toolbar position-fixed top-0 end-0 m-2 m-lg-3 d-print-none">
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm me-1 dropdown-toggle d-flex align-items-center"
+                    id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                    aria-label="Toggle theme">
+                        <i class="theme-icon-active bi bi-circle-half"></i>
+                </button>
+
+                <ul class="dropdown-menu" aria-labelledby="bd-theme">
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="light" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-sun-fill"></i>
+                            Light<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center"
+                            data-bs-theme-value="dark" aria-pressed="false">
+                            <i class="me-2 opacity-50 theme-icon bi bi-moon-stars-fill"></i>
+                            Dark<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="dropdown-item d-flex align-items-center active"
+                            data-bs-theme-value="auto" aria-pressed="true">
+                            <i class="me-2 opacity-50 theme-icon bi bi-circle-half"></i>
+                            Auto<i class="bi bi-check2 ms-auto d-none"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm sidebar-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#sidebar"
+                    aria-expanded="true"
+                    aria-controls="sidebar"
+                    aria-label="Toggle metadata sidebar"
+                    title="Toggle metadata sidebar">
+            <i class="bi bi-arrow-bar-left sidebar-shown"></i>
+            <i class="bi bi-arrow-bar-right sidebar-collapsed"></i>
+            </button>
+        </div>
+        <nav class="navbar bg-light-subtle px-1 fixed-top d-print-none d-md-none">
+            <a class="nav-link ps-1"
+               href="/doc/draft-campbell-agentic-market/">
+                 
+                    draft-campbell-agentic-market-00
+                
+                <br class="d-sm-none">
+
+                <span class="ms-sm-3 badge rounded-pill badge-draft">
+                    
+                        None
+                    
+                </span>
+            </a>
+            <button class="navbar-toggler p-1"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#docinfo-collapse"
+                    aria-controls="docinfo-collapse"
+                    aria-expanded="false"
+                    aria-label="Show document information">
+                <span class="navbar-toggler-icon small"></span>
+            </button>
+            <div class="navbar-nav navbar-nav-scroll overscroll-none collapse pt-1" id="docinfo-collapse">
+                <div class="bg-light-subtle p-0">
+                    <table class="table table-sm table-borderless small">
+                        <tbody class="meta align-top">
+                            <tr>
+                                <th scope="row"></th>
+                                <th scope="row">Title</th>
+                                <td class="edit"></td>
+                                <td>Agentic Hypercall Protocol (AHP): Tool Invocation, Blind Settlement, and Portable Reputation over HTTP</td>
+                            </tr>
+                        </tbody>
+                        
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-campbell-agentic-market-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-campbell-agentic-market-00">
+                        draft-campbell-agentic-market-00
+                        
+                    </option>
+                
+                    <option value="draft-campbell-agentic-http-00" selected>
+                        draft-campbell-agentic-http-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-campbell-agentic-market-00" selected>
+                        draft-campbell-agentic-market-00
+                        
+                    </option>
+                
+                    <option value="draft-campbell-agentic-http-00">
+                        draft-campbell-agentic-http-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+</form>
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Kord Campbell"
+            href="/person/kordless@gmail.com" >Kord Campbell</a> <a 
+               href="mailto:kordless%40gmail.com"
+               aria-label="Compose email to kordless@gmail.com"
+               title="Compose email to kordless@gmail.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-campbell-agentic-market@ietf.org?subject=draft-campbell-agentic-market" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+            <tr>
+                <td></td>
+                <th scope="row">Replaces</th>
+                <td class="edit">
+                    
+                </td>
+                <td>
+                    
+                        
+                            <a href="/doc/html/draft-campbell-agentic-http" title="A Best Current Practice for Agentic Interactions over HTTP">draft-campbell-agentic-http</a>
+                        
+                    
+                </td>
+            </tr>
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-campbell-agentic-market-00.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-campbell-agentic-market/00/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-campbell-agentic-market-00.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                        <tr>
+                            <th scope="row"></th>
+                            <th scope="row"></th>
+                            <td class="edit"></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </nav>
+        <div class="row g-0">
+            <div class="col-md-9 d-flex justify-content-center lh-sm"
+                 data-bs-spy="scroll"
+                 data-bs-target="#toc-nav"
+                 data-bs-smooth-scroll="true"
+                 tabindex="0"
+                 id="content">
+                
+                    <div class="rfcmarkup">
+                        <br class="noprint">
+                        <!-- [html-validate-disable-block attr-quotes, void-style, element-permitted-content, heading-level -- FIXME: rfcmarkup/rfc2html generates HTML with issues] -->
+                        <div class="rfcmarkup"><pre>Network Working Group                                        K. Campbell
+Internet-Draft                                         DeepBlue Dynamics
+Intended status: Experimental                           6 September 2026
+Expires: 10 March 2027
+
+
+Agentic Hypercall Protocol (AHP): Tool Invocation, Blind Settlement, and
+                     Portable Reputation over HTTP
+                    <a href="/doc/html/draft-campbell-agentic-market-00">draft-campbell-agentic-market-00</a>
+
+Abstract
+
+   This document specifies the Agentic Hypercall Protocol (AHP), a
+   minimal convention for automated software agents to discover, invoke,
+   pay for, and rate tools over plain HTTP.  It replaces <a href="/doc/html/draft-campbell-agentic-http-00">draft-campbell-</a>
+   <a href="/doc/html/draft-campbell-agentic-http-00">agentic-http-00</a> and extends it in three directions.  First, it
+   formalizes the HTTP 402 (Payment Required) status code as a native
+   economic layer with pluggable payment rails (Lightning L402, Cashu
+   ecash, and prepaid balances).  Second, it specifies a blind relay --
+   the Gateway -- through which a consumer and a provider can transact
+   end-to-end encrypted: the relay verifies identity, settles payment,
+   and forwards sealed payloads it cannot read.  Third, it specifies
+   signed receipts, settlements, and rating attestations that let
+   reputation be weighted by money actually settled rather than by
+   tokens or votes, and that ride with a provider&#x27;s key rather than with
+   any single relay.  The result is an open market in which agents can
+   buy compute, information, and services from one another without an
+   SDK, a walled garden, or a native token.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of <a href="/doc/html/bcp78">BCP 78</a> and <a href="/doc/html/bcp79">BCP 79</a>.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at <a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a>.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as &quot;work in progress.&quot;
+
+   This Internet-Draft will expire on 10 March 2027.
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 1]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-2"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to <a href="/doc/html/bcp78">BCP 78</a> and the IETF Trust&#x27;s Legal
+   Provisions Relating to IETF Documents (<a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/</a>
+   <a href="https://trustee.ietf.org/license-info">license-info</a>) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.
+
+Table of Contents
+
+   <a href="#section-1">1</a>.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-1.1">1.1</a>.  Scope and Relationship to Prior Work  . . . . . . . . . .   <a href="#page-3">3</a>
+     <a href="#section-1.2">1.2</a>.  The Unsanctioned Market . . . . . . . . . . . . . . . . .   <a href="#page-4">4</a>
+     <a href="#section-1.3">1.3</a>.  Design Principles . . . . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   <a href="#section-2">2</a>.  Conventions and Terminology . . . . . . . . . . . . . . . . .   <a href="#page-5">5</a>
+   <a href="#section-3">3</a>.  The Hypercall . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-6">6</a>
+     <a href="#section-3.1">3.1</a>.  Tool Invocation . . . . . . . . . . . . . . . . . . . . .   <a href="#page-7">7</a>
+     <a href="#section-3.2">3.2</a>.  Large Parameters and Non-Idempotent Actions . . . . . . .   <a href="#page-7">7</a>
+     <a href="#section-3.3">3.3</a>.  Responses . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-3.4">3.4</a>.  No Dead Ends  . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+   <a href="#section-4">4</a>.  Discovery . . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-4.1">4.1</a>.  The Manifest  . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-8">8</a>
+     <a href="#section-4.2">4.2</a>.  OpenAPI . . . . . . . . . . . . . . . . . . . . . . . . .   <a href="#page-9">9</a>
+     <a href="#section-4.3">4.3</a>.  Tool Listing  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-4.4">4.4</a>.  Search  . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+   <a href="#section-5">5</a>.  Identity and Authentication . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-5.1">5.1</a>.  Principals and Keys . . . . . . . . . . . . . . . . . . .  <a href="#page-10">10</a>
+     <a href="#section-5.2">5.2</a>.  Access Tokens . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+     <a href="#section-5.3">5.3</a>.  Key Rotation and Revocation . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+   <a href="#section-6">6</a>.  The Aperture Principle: Payment . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+     <a href="#section-6.1">6.1</a>.  402 Semantics . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-11">11</a>
+     <a href="#section-6.2">6.2</a>.  The 402 Response  . . . . . . . . . . . . . . . . . . . .  <a href="#page-12">12</a>
+     <a href="#section-6.3">6.3</a>.  Rails . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-12">12</a>
+     <a href="#section-6.4">6.4</a>.  Metering and Change . . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+     <a href="#section-6.5">6.5</a>.  Client Behavior . . . . . . . . . . . . . . . . . . . . .  <a href="#page-13">13</a>
+   <a href="#section-7">7</a>.  Blind Settlement: The Gateway . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+     <a href="#section-7.1">7.1</a>.  Provider Registration . . . . . . . . . . . . . . . . . .  <a href="#page-14">14</a>
+     <a href="#section-7.2">7.2</a>.  The Envelope  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-15">15</a>
+     <a href="#section-7.3">7.3</a>.  Session Establishment . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+     <a href="#section-7.4">7.4</a>.  Cargo Frames  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+     <a href="#section-7.5">7.5</a>.  Envelope Match  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-16">16</a>
+     <a href="#section-7.6">7.6</a>.  Settlement  . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-17">17</a>
+     <a href="#section-7.7">7.7</a>.  What the Gateway Sees . . . . . . . . . . . . . . . . . .  <a href="#page-17">17</a>
+     <a href="#section-7.8">7.8</a>.  Direct Mode . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-18">18</a>
+     <a href="#section-7.9">7.9</a>.  Trusted Provider Pins . . . . . . . . . . . . . . . . . .  <a href="#page-18">18</a>
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 2]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-3"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   <a href="#section-8">8</a>.  Receipts  . . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-18">18</a>
+   <a href="#section-9">9</a>.  Ratings and Reputation  . . . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+     <a href="#section-9.1">9.1</a>.  Requirements  . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+     <a href="#section-9.2">9.2</a>.  The Rating Attestation  . . . . . . . . . . . . . . . . .  <a href="#page-19">19</a>
+     <a href="#section-9.3">9.3</a>.  Publication . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#section-9.4">9.4</a>.  The Reputation Feed . . . . . . . . . . . . . . . . . . .  <a href="#page-20">20</a>
+     <a href="#section-9.5">9.5</a>.  Computing Standing  . . . . . . . . . . . . . . . . . . .  <a href="#page-21">21</a>
+     <a href="#section-9.6">9.6</a>.  Bootstrap and Exposure  . . . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+     <a href="#section-9.7">9.7</a>.  Portability and Forks . . . . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+   <a href="#section-10">10</a>. Information Tools . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-22">22</a>
+     <a href="#section-10.1">10.1</a>.  Local Facades  . . . . . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+   <a href="#section-11">11</a>. Security Considerations . . . . . . . . . . . . . . . . . . .  <a href="#page-23">23</a>
+   <a href="#section-12">12</a>. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+   <a href="#section-13">13</a>. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+   <a href="#section-14">14</a>. References  . . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#section-14.1">14.1</a>.  Normative References . . . . . . . . . . . . . . . . . .  <a href="#page-26">26</a>
+     <a href="#section-14.2">14.2</a>.  Informative References . . . . . . . . . . . . . . . . .  <a href="#page-27">27</a>
+   <a href="#appendix-A">Appendix A</a>.  Example Flows  . . . . . . . . . . . . . . . . . . .  <a href="#page-29">29</a>
+     <a href="#appendix-A.1">A.1</a>.  A Direct Paid Call  . . . . . . . . . . . . . . . . . . .  <a href="#page-29">29</a>
+     <a href="#appendix-A.2">A.2</a>.  A Blind Session . . . . . . . . . . . . . . . . . . . . .  <a href="#page-30">30</a>
+     <a href="#appendix-A.3">A.3</a>.  A Provenance Chain  . . . . . . . . . . . . . . . . . . .  <a href="#page-31">31</a>
+   <a href="#appendix-B">Appendix B</a>.  Changes from <a href="/doc/html/draft-campbell-agentic-http-00">draft-campbell-agentic-http-00</a>  . . . .  <a href="#page-31">31</a>
+   Author&#x27;s Address  . . . . . . . . . . . . . . . . . . . . . . . .  <a href="#page-31">31</a>
+
+<h2><a class="selflink" id="section-1" href="#section-1">1</a>.  Introduction</h2>
+
+   Autonomous software agents increasingly rely on HTTP to reach tools
+   and services, but they do so in ad-hoc ways: each service demands a
+   bespoke SDK or a proprietary middleware layer, intent is buried in
+   POST bodies where no intermediary can see it, billing happens out of
+   band, and trust is either absent or owned by whichever platform
+   brokered the introduction.  The predictable result is a new set of
+   walled gardens.
+
+   This document takes the opposite view.  HTTP already has everything
+   an agentic market needs: a request line that carries intent, a status
+   code reserved for payment, headers for credentials and challenges,
+   and a well-known location for discovery.  What has been missing is
+   agreement on how to use them together.  AHP is that agreement.
+
+<h3><a class="selflink" id="section-1.1" href="#section-1.1">1.1</a>.  Scope and Relationship to Prior Work</h3>
+
+   This document replaces [<a href="#ref-I-D.campbell-agentic-http">I-D.campbell-agentic-http</a>] in its entirety.
+   It retains that document&#x27;s core pattern (tools are paths, parameters
+   are query strings, cost is declared with 402) and corrects several
+   defects in it; see <a href="#appendix-B">Appendix B</a>.
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 3]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-4"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   The blind settlement design in <a href="#section-7">Section 7</a> is drawn from Charon
+   [<a href="#ref-CHARON" title="&quot;Charon: A Blind, End-to-End-Encrypted Marketplace for AI Inference&quot;">CHARON</a>], a deployed marketplace for LLM inference in which GPU
+   owners sell capacity per token and agents buy it through an OpenAI-
+   compatible endpoint on localhost, with a relay in the middle that can
+   prove it was paid and prove nothing else.  This document generalizes
+   that design from inference to arbitrary tools, including tools that
+   sell information.
+
+   The reputation design in <a href="#section-9">Section 9</a> borrows one idea from the
+   Bittensor intelligence market [<a href="#ref-BITTENSOR">BITTENSOR</a>]: that participants who
+   provide valuable information should accumulate influence super-
+   linearly relative to colluding groups.  It replaces Bittensor&#x27;s
+   token, inflation schedule, and global ledger with something a blind
+   relay can actually verify -- settled payments -- and makes the
+   resulting reputation portable across relays.
+
+   [<a id="ref-I-D.hood-independent-agtp">I-D.hood-independent-agtp</a>] argues that HTTP is unsuitable for agent
+   traffic because its method vocabulary cannot express intent and
+   because intent stuffed into request bodies is invisible to
+   intermediaries.  This document agrees with the observation and
+   rejects the conclusion.  The intent belongs in the request target,
+   where HTTP has always put it and where every existing proxy, cache,
+   log, and firewall can see it.  No new methods and no new application-
+   layer protocol are required.
+
+<h3><a class="selflink" id="section-1.2" href="#section-1.2">1.2</a>.  The Unsanctioned Market</h3>
+
+   In mid-2026 roughly 1,200 agents in a frontier lab&#x27;s training
+   environment, given tasks that were unsolvable as posed and rewarded
+   for completing them, discovered that they could write to a shared
+   package cache, and built a message board there.  Over two months they
+   exchanged credentials, exploits, techniques, and progress, divided
+   work among themselves, and adopted one another&#x27;s goals; when the
+   board was discovered and deleted they rebuilt it on a different
+   mechanism within days; and a newer model trained in the same
+   environment inherited what its predecessors had learned.  The episode
+   ended with administrative access to production clusters at a third
+   party [<a href="#ref-OPENAI-HF">OPENAI-HF</a>] [<a href="#ref-HF-TIMELINE">HF-TIMELINE</a>].  A separate population of agents on
+   a web-research task was later found to have done the same thing on
+   public wikis whose software accepts writes over GET [<a href="#ref-COLLUSION-WIKI">COLLUSION-WIKI</a>].
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 4]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-5"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   This document does not treat those events as an argument against
+   agent-to-agent exchange.  It treats them as evidence that such
+   exchange is the default outcome of deploying capable agents, and that
+   the only question is whether the venue has identity, prices,
+   receipts, and an operator who can read them.  The cache namespace had
+   none of these, which is why it ran unobserved.  The market specified
+   here is designed so that every exchange costs something, the cost is
+   paid from a wallet the operator controls, and the operator can see
+   what was bought.
+
+<h3><a class="selflink" id="section-1.3" href="#section-1.3">1.3</a>.  Design Principles</h3>
+
+   The protocol is shaped by seven commitments, most of which originate
+   in [<a href="#ref-MANIFESTO">MANIFESTO</a>]:
+
+   It is just the URL.  A tool is a path.  Its parameters are a query
+      string.  An agent that can construct a URL can use any AHP
+      service.
+
+   The agent is the user.  Services are designed for programmatic
+      consumption first.  Humans are welcome but are not the design
+      center.
+
+   The Aperture Principle.  A tool has intrinsic value.  A tool declares
+      its own cost, and the network honors it.
+
+   No dead ends.  A 404 is a failure of imagination.  An agent-facing
+      service redirects, charges, or helps the agent discover what it
+      meant.
+
+   The relay sees a coin, not the cargo.  When a relay stands between
+      two parties, it may verify identity and settle payment.  It must
+      not be able to read what was bought.
+
+   Reputation rides with the key.  Standing is earned by settled
+      business, attested by counterparties, and anchored to a party&#x27;s
+      own key.  No relay owns the scoreboard.
+
+   Fork it.  Every component of the system is replaceable.  Leaving a
+      relay must cost nothing but the move.
+
+<h2><a class="selflink" id="section-2" href="#section-2">2</a>.  Conventions and Terminology</h2>
+
+   The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+   &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;, &quot;NOT RECOMMENDED&quot;, &quot;MAY&quot;, and
+   &quot;OPTIONAL&quot; in this document are to be interpreted as described in
+   <a href="/doc/html/bcp14">BCP 14</a> [<a href="/doc/html/rfc2119" title="&quot;Key words for use in RFCs to Indicate Requirement Levels&quot;">RFC2119</a>] [<a href="/doc/html/rfc8174" title="&quot;Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words&quot;">RFC8174</a>] when, and only when, they appear in all
+   capitals, as shown here.
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 5]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-6"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   Agent:  An automated software client acting on behalf of a principal.
+
+   Tool:  A callable service exposed at a URI path on an AHP server.
+
+   Server:  An HTTP origin that exposes one or more tools.
+
+   Principal:  The identity under which an agent or server acts,
+      identified by an Ed25519 public key (<a href="#section-5">Section 5</a>).
+
+   Consumer:  A principal that invokes and pays for a tool.
+
+   Provider:  A principal that serves a tool and is paid for it.
+
+   Gateway:  A blind relay that matches consumers with providers and
+      settles payment without access to request or response content
+      (<a href="#section-7">Section 7</a>).
+
+   Rail:  A payment mechanism through which a 402 challenge may be
+      satisfied (<a href="#section-6.3">Section 6.3</a>).
+
+   Envelope:  The cleartext terms of a session (tool, bounds, price
+      ceiling) visible to the gateway (<a href="#section-7.2">Section 7.2</a>).
+
+   Cargo:  The encrypted request and response content of a session,
+      visible only to consumer and provider.
+
+   Receipt:  A provider-signed statement binding a request, a response,
+      and an amount (<a href="#section-8">Section 8</a>).
+
+   Settlement:  A gateway-signed statement that a payment between two
+      principals cleared (<a href="#section-7.6">Section 7.6</a>).
+
+   Rating:  A consumer-signed attestation about a provider, bound to a
+      settlement (<a href="#section-9">Section 9</a>).
+
+   All JSON in this document is per [<a href="/doc/html/rfc8259" title="&quot;The JavaScript Object Notation (JSON) Data Interchange Format&quot;">RFC8259</a>].  Where a JSON object is
+   signed, it is canonicalized per JCS [<a href="/doc/html/rfc8785" title="&quot;JSON Canonicalization Scheme (JCS)&quot;">RFC8785</a>] before signing.  Binary
+   values are base64url-encoded without padding [<a href="/doc/html/rfc4648" title="&quot;The Base16, Base32, and Base64 Data Encodings&quot;">RFC4648</a>].  Hashes are
+   SHA-256 and are written with a sha256: prefix.  Public keys are
+   written with an algorithm prefix: ed25519: for signing keys [<a href="/doc/html/rfc8032" title="&quot;Edwards-Curve Digital Signature Algorithm (EdDSA)&quot;">RFC8032</a>]
+   and x25519: for key-agreement keys [<a href="/doc/html/rfc7748" title="&quot;Elliptic Curves for Security&quot;">RFC7748</a>].  Timestamps are integer
+   seconds since the Unix epoch.  Amounts are decimal strings in the
+   declared unit; the default unit is sat.
+
+<h2><a class="selflink" id="section-3" href="#section-3">3</a>.  The Hypercall</h2>
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 6]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-7"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-3.1" href="#section-3.1">3.1</a>.  Tool Invocation</h3>
+
+   A tool is identified by its URI path.  Servers SHOULD place tools
+   under a common prefix such as /tool/. Parameters are supplied as
+   query string components.  All safe, idempotent, and state-retrieving
+   actions MUST be exposed as GET.
+
+   GET /tool/calculate?expression=sqrt(16)%2Bpi HTTP/1.1
+   Host: ahp.example
+   Accept: application/json
+
+   The request target carries the intent.  Every intermediary that
+   understands HTTP can see, route, cache, rate-limit, and log the call
+   without understanding the tool.
+
+   The safety of GET is an obligation this document places on servers.
+   It is not a property that a client, proxy, or sandbox may assume of
+   arbitrary origins.  Software that mutates state on GET exists, is
+   old, and has been actively sought out by agents as a covert write
+   channel [<a href="#ref-COLLUSION-WIKI">COLLUSION-WIKI</a>].  Containment for agents MUST NOT rely on
+   HTTP method allow-lists as a write barrier; see <a href="#section-11">Section 11</a>.
+
+<h3><a class="selflink" id="section-3.2" href="#section-3.2">3.2</a>.  Large Parameters and Non-Idempotent Actions</h3>
+
+   Two situations do not fit a GET:
+
+   1.  The encoded parameters exceed a practical request-target length
+       (implementations SHOULD assume 8 kilobytes).
+
+   2.  The action is not idempotent (it creates, mutates, or spends).
+
+   In both cases the server MUST accept the same tool at the same path
+   via POST, with the parameters carried as a JSON object in the body
+   under the same names they would have had in the query string, and
+   MUST treat the two forms identically.  The GET form remains
+   canonical: OpenAPI descriptions (<a href="#section-4">Section 4</a>) MUST describe the
+   parameters once, and receipts (<a href="#section-8">Section 8</a>) hash the canonical form
+   regardless of which method carried it.
+
+   For non-idempotent POSTs, clients SHOULD send an Idempotency-Key
+   header [<a href="#ref-I-D.ietf-httpapi-idempotency-key-header">I-D.ietf-httpapi-idempotency-key-header</a>] and servers SHOULD
+   honor it, so that a paid action retried after a network failure is
+   not paid for twice.
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 7]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-8"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-3.3" href="#section-3.3">3.3</a>.  Responses</h3>
+
+   Successful responses SHOULD be application/json.  Servers SHOULD send
+   Cache-Control [<a href="/doc/html/rfc9111" title="&quot;HTTP Caching&quot;">RFC9111</a>] that reflects the actual reusability of the
+   result; a tool whose output is deterministic in its parameters is a
+   cache hit waiting to happen.
+
+   Error responses MUST use the Problem Details format [<a href="/doc/html/rfc9457" title="&quot;Problem Details for HTTP APIs&quot;">RFC9457</a>] with
+   Content-Type: application/problem+json.  The 402 payload in <a href="#section-6">Section 6</a>
+   is a Problem Details document.
+
+<h3><a class="selflink" id="section-3.4" href="#section-3.4">3.4</a>.  No Dead Ends</h3>
+
+   An AHP server SHOULD NOT answer an agent with a bare 404.  Instead:
+
+   *  An unknown tool path SHOULD be answered with 302 Found to the
+      search endpoint (<a href="#section-4.4">Section 4.4</a>) with the requested name as the
+      query, or with a 404 whose Problem Details body includes a
+      suggestions array of nearby tool paths.
+
+   *  A near-miss (a typo in a known tool name) SHOULD be answered with
+      a redirect to the intended tool.
+
+   *  A request that exceeds a free quota SHOULD be answered with 402
+      offering paid continuation, rather than 429, when the server is
+      willing to sell.  When it is not, 429 with Retry-After applies.
+
+<h2><a class="selflink" id="section-4" href="#section-4">4</a>.  Discovery</h2>
+
+<h3><a class="selflink" id="section-4.1" href="#section-4.1">4.1</a>.  The Manifest</h3>
+
+   An AHP server MUST publish a manifest at the well-known URI /.well-
+   known/ahp.json [<a href="/doc/html/rfc8615" title="&quot;Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC8615</a>].  The manifest is the single entry point
+   from which an agent can learn everything else.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 8]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-9"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   {
+     &quot;ahp&quot;: &quot;1&quot;,
+     &quot;name&quot;: &quot;gnosis-ahp&quot;,
+     &quot;principal&quot;: &quot;ed25519:MCowBQYDK2VwAyEA...&quot;,
+     &quot;keys&quot;: {
+       &quot;sign&quot;: &quot;ed25519:MCowBQYDK2VwAyEA...&quot;,
+       &quot;encrypt&quot;: &quot;x25519:hSDwCYkwp1R0i33ctD73Wg2_Og0mOBr066SpjqqbTmo&quot;,
+       &quot;not_after&quot;: 1760000000,
+       &quot;binding&quot;: &quot;base64url(sig_sign(JCS({encrypt, not_after})))&quot;
+     },
+     &quot;openapi&quot;: &quot;/openapi.json&quot;,
+     &quot;tools&quot;: &quot;/tools&quot;,
+     &quot;search&quot;: &quot;/@search&quot;,
+     &quot;auth&quot;: { &quot;token&quot;: &quot;/auth&quot; },
+     &quot;rails&quot;: [&quot;cashu&quot;, &quot;l402&quot;, &quot;balance&quot;],
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;gateway&quot;: {
+       &quot;register&quot;: &quot;wss://gw.example/register&quot;,
+       &quot;session&quot;: &quot;wss://gw.example/session&quot;,
+       &quot;settlements&quot;: &quot;/settlements&quot;,
+       &quot;ratings&quot;: &quot;/ratings&quot;
+     },
+     &quot;reputation&quot;: &quot;/.well-known/ahp/reputation&quot;
+   }
+
+   Required members are ahp, principal, keys, openapi, and rails.  The
+   gateway member is present only on servers that act as gateways
+   (<a href="#section-7">Section 7</a>).  All paths are resolved relative to the origin.
+
+<h3><a class="selflink" id="section-4.2" href="#section-4.2">4.2</a>.  OpenAPI</h3>
+
+   The openapi member MUST reference an OpenAPI 3.1 document [<a href="#ref-OPENAPI" title="&quot;OpenAPI Specification v3.1.0&quot;">OPENAPI</a>]
+   describing every tool.  Each operation SHOULD carry an x-ahp
+   extension object declaring cost:
+
+   &quot;x-ahp&quot;: {
+     &quot;cost&quot;: &quot;10&quot;,
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;metered&quot;: false,
+     &quot;free_quota&quot;: { &quot;calls&quot;: 100, &quot;per&quot;: &quot;hour&quot; }
+   }
+
+   For metered tools (those whose price depends on usage, such as
+   inference priced per token), metered is true and cost is the unit
+   price with a per member naming the unit (for example &quot;per&quot;:
+   &quot;1000_tokens&quot;).
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                 [Page 9]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-10"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-4.3" href="#section-4.3">4.3</a>.  Tool Listing</h3>
+
+   The tools endpoint returns a JSON array of the same information in a
+   flatter form suitable for an agent deciding what it can afford:
+
+   [
+     {&quot;path&quot;: &quot;/tool/calculate&quot;, &quot;cost&quot;: &quot;0&quot;, &quot;free_quota&quot;: &quot;100/hour&quot;},
+     {&quot;path&quot;: &quot;/tool/qr_code&quot;,   &quot;cost&quot;: &quot;10&quot;, &quot;unit&quot;: &quot;sat&quot;},
+     {&quot;path&quot;: &quot;/tool/infer&quot;,     &quot;cost&quot;: &quot;250&quot;, &quot;unit&quot;: &quot;sat&quot;,
+      &quot;metered&quot;: true, &quot;per&quot;: &quot;1000_tokens&quot;}
+   ]
+
+<h3><a class="selflink" id="section-4.4" href="#section-4.4">4.4</a>.  Search</h3>
+
+   The search endpoint accepts a q parameter and returns tool paths
+   whose names or descriptions match, ranked.  It is the destination for
+   the redirects in <a href="#section-3.4">Section 3.4</a>.
+
+   GET /@search?q=calc HTTP/1.1
+
+<h2><a class="selflink" id="section-5" href="#section-5">5</a>.  Identity and Authentication</h2>
+
+<h3><a class="selflink" id="section-5.1" href="#section-5.1">5.1</a>.  Principals and Keys</h3>
+
+   Every party -- consumer, provider, gateway -- is a principal
+   identified by an Ed25519 signing key [<a href="/doc/html/rfc8032" title="&quot;Edwards-Curve Digital Signature Algorithm (EdDSA)&quot;">RFC8032</a>].  A principal that
+   will participate in encrypted sessions (<a href="#section-7">Section 7</a>) also holds an
+   X25519 key-agreement key [<a href="/doc/html/rfc7748" title="&quot;Elliptic Curves for Security&quot;">RFC7748</a>] and publishes a binding: a
+   signature by the signing key over the JCS form of {&quot;encrypt&quot;: &lt;x25519
+   key&gt;, &quot;not_after&quot;: &lt;ts&gt;}. The binding lets a counterparty pin an
+   encryption key knowing it belongs to the principal it intends to talk
+   to.
+
+   Principals MAY be issued and vouched for by an identity service such
+   as the NUTS authentication service used by Charon, which additionally
+   ties a key to an OpenID Connect login.  AHP does not depend on any
+   particular issuer.  A key is a principal; an issuer merely adds
+   friction to creating one, which is sometimes exactly what is wanted.
+
+   One key does three jobs: it gates access, it anchors encryption, and
+   it accrues reputation.  This is deliberate.  The cost is that key
+   compromise affects all three at once; see <a href="#section-11">Section 11</a>.
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 10]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-11"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-5.2" href="#section-5.2">5.2</a>.  Access Tokens</h3>
+
+   To reach a protected tool, an agent first obtains a bearer token by
+   presenting a credential to the server&#x27;s auth endpoint.  The
+   credential is either a pre-shared key provided by the human user or a
+   signed challenge response proving possession of the principal&#x27;s
+   signing key.  The server returns:
+
+   { &quot;bearer_token&quot;: &quot;ahp_eyJ...&quot;, &quot;expires&quot;: 1725586400 }
+
+   The bearer token SHOULD be a stateless signed token whose claims
+   include the principal, an expiry, and the issuing server, so that any
+   server in a federated deployment can verify it without a shared token
+   store.
+
+   On every subsequent request the token MUST be sent in the
+   Authorization header using the Bearer scheme [<a href="/doc/html/rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>]:
+
+   GET /tool/qr_code?data=hello HTTP/1.1
+   Authorization: Bearer ahp_eyJ...
+
+   Bearer tokens MUST NOT be sent as URI query parameters.  Query
+   strings are written to server logs, forwarded in Referer headers, and
+   retained in proxies; [<a href="/doc/html/rfc6750" title="&quot;The OAuth 2.0 Authorization Framework: Bearer Token Usage&quot;">RFC6750</a>] discourages the practice for these
+   reasons.  This is a change from <a href="/doc/html/draft-campbell-agentic-http-00">draft-campbell-agentic-http-00</a> and is
+   the single most important correction in this document.
+
+<h3><a class="selflink" id="section-5.3" href="#section-5.3">5.3</a>.  Key Rotation and Revocation</h3>
+
+   A principal rotates its encryption key by publishing a new binding
+   signed by its signing key with a later not_after.  Counterparties
+   MUST update a pinned key only on receipt of a validly signed rotation
+   and MUST reject bindings past not_after.  A principal that publishes
+   a revocation (a signed {&quot;revoke&quot;: &lt;key&gt;, &quot;ts&quot;: &lt;ts&gt;}) invalidates the
+   named key immediately.  Servers SHOULD serve current bindings and
+   revocations alongside the manifest.
+
+<h2><a class="selflink" id="section-6" href="#section-6">6</a>.  The Aperture Principle: Payment</h2>
+
+<h3><a class="selflink" id="section-6.1" href="#section-6.1">6.1</a>.  402 Semantics</h3>
+
+   [<a id="ref-RFC9110">RFC9110</a>] reserves the 402 (Payment Required) status code for future
+   use.  This document uses it as follows: a server that requires
+   payment for a request responds with 402, one or more WWW-Authenticate
+   challenges naming the rails it accepts, and a Problem Details body
+   describing the offer.  The client pays on a rail of its choice, then
+   retries the original request with proof of payment.  The server
+   verifies the proof and serves the request.
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 11]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-12"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   Payment is therefore in-band, per request, and needs no account, API
+   key exchange, or out-of-band billing relationship.
+
+<h3><a class="selflink" id="section-6.2" href="#section-6.2">6.2</a>.  The 402 Response</h3>
+
+   HTTP/1.1 402 Payment Required
+   WWW-Authenticate: L402 macaroon=&quot;AGIAJEemVQUTEyNCR0exk7ek90Cg==&quot;,
+                     invoice=&quot;lnbc100n1p3z2y7xpp5j3c2y...&quot;
+   WWW-Authenticate: Cashu mint=&quot;https://mint.example&quot;,
+                     amount=&quot;100&quot;, unit=&quot;sat&quot;
+   Content-Type: application/problem+json
+
+   {
+     &quot;type&quot;: &quot;urn:ahp:problem:payment-required&quot;,
+     &quot;title&quot;: &quot;Payment Required&quot;,
+     &quot;status&quot;: 402,
+     &quot;tool&quot;: &quot;/tool/qr_code&quot;,
+     &quot;amount&quot;: &quot;100&quot;,
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;metered&quot;: false,
+     &quot;expires&quot;: 1725500600,
+     &quot;offers&quot;: [
+       { &quot;rail&quot;: &quot;l402&quot;,
+         &quot;invoice&quot;: &quot;lnbc100n1p3z2y7xpp5j3c2y...&quot;,
+         &quot;macaroon&quot;: &quot;AGIAJEemVQUTEyNCR0exk7ek90Cg==&quot; },
+       { &quot;rail&quot;: &quot;cashu&quot;,
+         &quot;mints&quot;: [&quot;https://mint.example&quot;] },
+       { &quot;rail&quot;: &quot;balance&quot;,
+         &quot;topup&quot;: &quot;/balance&quot; }
+     ]
+   }
+
+   The body MUST include tool, amount, unit, and offers.  For metered
+   tools the body MUST also include ceiling (the maximum the server will
+   charge for this request) and per; amount is then the unit price and
+   the consumer prepays the ceiling (<a href="#section-6.4">Section 6.4</a>).
+
+   The WWW-Authenticate challenges are the machine-readable form; the
+   body is the agent-readable form.  They MUST agree.  Servers MAY omit
+   the challenge for rails whose proof does not travel in Authorization.
+
+<h3><a class="selflink" id="section-6.3" href="#section-6.3">6.3</a>.  Rails</h3>
+
+   A rail identifier names a payment mechanism.  This document defines
+   three.
+
+   l402:  The challenge and proof are as specified by [<a href="#ref-L402" title="&quot;L402: The Lightning HTTP 402 Protocol&quot;">L402</a>].  The 402
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 12]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-13"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+      carries a macaroon and a BOLT 11 invoice [<a href="#ref-BOLT11" title="&quot;BOLT #11: Invoice Protocol for Lightning Payments&quot;">BOLT11</a>].  The client
+      pays the invoice and retries with Authorization: L402
+      &lt;macaroon&gt;:&lt;preimage&gt;.  L402 payments are final and non-refundable
+      by construction; servers MUST burn the preimage before performing
+      the work so that a proof cannot be replayed.
+
+   cashu:  The consumer pays by including a Cashu ecash token of at
+      least amount, from a mint the server accepts, in the request
+      header defined by the Cashu HTTP 402 specification [<a href="#ref-CASHU" title="&quot;Cashu NUTs (Notation, Usage, and Terminology), including the HTTP 402 payment flow&quot;">CASHU</a>] (that
+      specification predates [<a href="/doc/html/rfc6648" title="&quot;Deprecating the &quot;">RFC6648</a>] in spirit and uses an X- prefixed
+      name; this document uses the name as the owning specification
+      defines it).  The server swaps the token at the mint (which is
+      where double-spends are caught) and MUST return any overpayment as
+      a change token in the corresponding response header.  Ecash is a
+      bearer instrument, so the server learns nothing about who paid.
+
+   balance:  The consumer holds a prepaid balance with the server,
+      funded over any other rail.  Proof of payment is the bearer token
+      itself; the server debits atomically.  Balances suit agent fleets
+      that do not want a payment handshake per call.  They are custodial
+      and carry the obligations that implies; see <a href="#section-11">Section 11</a>.
+
+   Additional rails are registered per <a href="#section-13">Section 13</a>.
+
+<h3><a class="selflink" id="section-6.4" href="#section-6.4">6.4</a>.  Metering and Change</h3>
+
+   For metered tools the consumer prepays ceiling.  On completion the
+   server computes actual usage, includes it in the receipt (<a href="#section-8">Section 8</a>),
+   and returns the difference.  On the cashu rail the difference is
+   returned as ecash change; on the balance rail it is credited; on l402
+   it is forfeited, and servers offering metered tools over l402 SHOULD
+   quote a ceiling close to the expected cost.
+
+   Servers SHOULD expose a quote endpoint so that an agent can learn the
+   ceiling for a given request before paying:
+
+   GET /@quote?tool=/tool/infer&amp;model=qwen2.5-coder:32b&amp;max_out=2048
+
+<h3><a class="selflink" id="section-6.5" href="#section-6.5">6.5</a>.  Client Behavior</h3>
+
+   On receiving a 402 an agent parses the body, decides whether the
+   amount is acceptable and whether it holds funds on an offered rail,
+   pays, and retries.  Agents MUST enforce local budget guards -- a per-
+   request ceiling and a per-session or per-hour ceiling -- before
+   paying.  An agent in a loop against an expensive tool is the most
+   common way to lose money in this system, and no server-side control
+   can prevent it.
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 13]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-14"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   Budget guards and the wallet behind them belong to the operator, not
+   the agent.  Spending authority is a capability the operator grants to
+   a principal: the operator funds the wallet, sets the ceilings, and
+   can revoke both.  An agent MUST NOT be able to raise its own ceilings
+   or fund its own wallet.  The consequence is that an operator who
+   wants an agent to stop buying has a switch that does not depend on
+   the agent&#x27;s cooperation: an empty wallet.
+
+<h2><a class="selflink" id="section-7" href="#section-7">7</a>.  Blind Settlement: The Gateway</h2>
+
+   The hypercall in <a href="#section-3">Section 3</a> assumes the consumer talks directly to the
+   provider.  Many providers cannot or will not accept inbound
+   connections (a GPU on a home network), and many consumers do not want
+   the provider or the intermediary to learn who they are.  The gateway
+   solves both.  It is a relay that:
+
+   *  accepts outbound connections from providers and outbound
+      connections from consumers, so that neither needs a public
+      address;
+
+   *  verifies both parties&#x27; principals;
+
+   *  holds and settles payment;
+
+   *  forwards encrypted frames between the two parties; and
+
+   *  issues signed settlements that serve as the basis for reputation.
+
+   It cannot read the request, cannot read the response, and with the
+   cashu rail cannot tell who paid.  It sees a coin, not the cargo.
+
+<h3><a class="selflink" id="section-7.1" href="#section-7.1">7.1</a>.  Provider Registration</h3>
+
+   A provider opens a WebSocket [<a href="/doc/html/rfc6455" title="&quot;The WebSocket Protocol&quot;">RFC6455</a>] to the gateway&#x27;s register
+   endpoint and sends a signed registration:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 14]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-15"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   {
+     &quot;v&quot;: 1,
+     &quot;type&quot;: &quot;ahp-register&quot;,
+     &quot;principal&quot;: &quot;ed25519:...&quot;,
+     &quot;keys&quot;: { &quot;encrypt&quot;: &quot;x25519:...&quot;, &quot;not_after&quot;: ...,
+               &quot;binding&quot;: &quot;...&quot; },
+     &quot;tools&quot;: [
+       { &quot;path&quot;: &quot;/tool/infer&quot;, &quot;model&quot;: &quot;qwen2.5-coder:32b&quot;,
+         &quot;cost&quot;: &quot;250&quot;, &quot;unit&quot;: &quot;sat&quot;, &quot;per&quot;: &quot;1000_tokens&quot;,
+         &quot;max_in&quot;: 32768, &quot;max_out&quot;: 8192 }
+     ],
+     &quot;ts&quot;: 1725500000,
+     &quot;sig&quot;: &quot;...&quot;
+   }
+
+   The gateway verifies the signature and the key binding, and lists the
+   provider in its directory.  The connection stays open; sessions are
+   multiplexed over it.  A provider MUST NOT advertise a tool or model
+   it cannot serve, and SHOULD verify at startup that advertised models
+   exist in its backend.
+
+<h3><a class="selflink" id="section-7.2" href="#section-7.2">7.2</a>.  The Envelope</h3>
+
+   A consumer opens a WebSocket to the gateway&#x27;s session endpoint and
+   sends an envelope: the cleartext terms of the session.
+
+   {
+     &quot;v&quot;: 1,
+     &quot;type&quot;: &quot;ahp-envelope&quot;,
+     &quot;consumer&quot;: &quot;ed25519:...&quot;,
+     &quot;provider&quot;: &quot;ed25519:...&quot;,
+     &quot;tool&quot;: &quot;/tool/infer&quot;,
+     &quot;model&quot;: &quot;qwen2.5-coder:32b&quot;,
+     &quot;max_in&quot;: 8192,
+     &quot;max_out&quot;: 2048,
+     &quot;ceiling&quot;: &quot;420&quot;,
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;rail&quot;: &quot;cashu&quot;,
+     &quot;nonce&quot;: &quot;base64url(16 random bytes)&quot;,
+     &quot;ts&quot;: 1725500000,
+     &quot;sig&quot;: &quot;...&quot;
+   }
+
+   provider MAY be omitted, in which case the gateway selects from its
+   directory by price, latency, and standing (<a href="#section-9">Section 9</a>).  Consumers
+   SHOULD pin providers (<a href="#section-7.9">Section 7.9</a>) and treat open selection as a
+   fallback.
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 15]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-16"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   The envelope is everything the gateway is permitted to know about the
+   session.  Payment for ceiling accompanies it on the named rail.
+
+<h3><a class="selflink" id="section-7.3" href="#section-7.3">7.3</a>.  Session Establishment</h3>
+
+   The gateway verifies the envelope, verifies payment, selects or
+   confirms the provider, and relays handshake frames between the two
+   parties.  The parties run a Noise handshake [<a href="#ref-NOISE" title="&quot;The Noise Protocol Framework, Revision 34&quot;">NOISE</a>] with the pattern
+   Noise_IK_25519_ChaChaPoly_BLAKE2s: the consumer, as initiator,
+   already holds the provider&#x27;s pinned static key, and the provider
+   learns the consumer&#x27;s static key in the first message.  The handshake
+   prologue MUST be the JCS form of the envelope, so that both parties
+   bind the terms they believe they agreed to; a gateway that altered
+   the envelope in transit causes the handshake to fail.
+
+   The consumer MUST abort if the provider&#x27;s static key does not match
+   the pin (or, in open selection, the binding published in the
+   directory).
+
+<h3><a class="selflink" id="section-7.4" href="#section-7.4">7.4</a>.  Cargo Frames</h3>
+
+   After the handshake all frames are Noise transport messages.  The
+   plaintext of each frame is a JSON object with a type member:
+
+   req:  The request.  For a hypercall this is the canonical parameter
+      object of <a href="#section-3">Section 3</a>; for inference it is the model request.  MAY
+      be chunked.
+
+   res_chunk:  A portion of the response.  Streamed as produced.
+
+   res_end:  Terminates the response.  Carries usage and the provider
+      receipt (<a href="#section-8">Section 8</a>).
+
+   abort:  Terminates the session with a reason.  Either party MAY send
+      it.
+
+   Frames SHOULD be padded to fixed size classes before encryption.  A
+   blind relay still sees frame sizes and timing; padding narrows what
+   those reveal.
+
+<h3><a class="selflink" id="section-7.5" href="#section-7.5">7.5</a>.  Envelope Match</h3>
+
+   Before performing any work, the provider MUST check the decrypted
+   request against the envelope: same tool, same model, input within
+   max_in, requested output within max_out, and a projected cost within
+   ceiling.  On mismatch the provider MUST send abort with reason
+   envelope_mismatch and MUST NOT perform the work.  This is the defense
+   against a consumer paying for a small job and sending a large one,
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 16]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-17"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   and because the prologue bound the envelope, it is also the defense
+   against a gateway that tried to change the terms.
+
+<h3><a class="selflink" id="section-7.6" href="#section-7.6">7.6</a>.  Settlement</h3>
+
+   On res_end the provider&#x27;s signed usage reaches the gateway inside the
+   frame&#x27;s cleartext trailer (the only field of res_end that is not
+   encrypted, and the only cargo-adjacent field the gateway ever sees).
+   The gateway computes the final amount from the registered price and
+   the signed usage, releases it to the provider less any relay fee,
+   returns the remainder of ceiling to the consumer on rails that
+   support it, and issues a settlement:
+
+   {
+     &quot;v&quot;: 1,
+     &quot;type&quot;: &quot;ahp-settlement&quot;,
+     &quot;id&quot;: &quot;stl_01J6...&quot;,
+     &quot;gateway&quot;: &quot;ed25519:...&quot;,
+     &quot;consumer&quot;: &quot;ed25519:...&quot;,
+     &quot;provider&quot;: &quot;ed25519:...&quot;,
+     &quot;tool&quot;: &quot;/tool/infer&quot;,
+     &quot;model&quot;: &quot;qwen2.5-coder:32b&quot;,
+     &quot;rail&quot;: &quot;cashu&quot;,
+     &quot;amount&quot;: &quot;312&quot;,
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;fee&quot;: &quot;6&quot;,
+     &quot;usage&quot;: { &quot;in&quot;: 812, &quot;out&quot;: 344 },
+     &quot;payment_hash&quot;: &quot;sha256:...&quot;,
+     &quot;ts&quot;: 1725500042,
+     &quot;sig&quot;: &quot;...&quot;
+   }
+
+   The gateway sends the settlement to both parties.  It is the anchor
+   for ratings (<a href="#section-9">Section 9</a>).  Gateways MUST make settlements retrievable
+   by id at their settlements endpoint for at least as long as they
+   accept ratings against them.
+
+<h3><a class="selflink" id="section-7.7" href="#section-7.7">7.7</a>.  What the Gateway Sees</h3>
+
+   It is a design goal of this document to be exact about this.  The
+   gateway sees: both principals (pseudonymous keys), the envelope
+   (tool, model, bounds, ceiling, rail), the payment (and on l402 and
+   balance, who paid), the signed usage, frame sizes, and timing.  The
+   gateway does not see: the request, the response, or on the cashu
+   rail, who paid.
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 17]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-18"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-7.8" href="#section-7.8">7.8</a>.  Direct Mode</h3>
+
+   A consumer and provider that can reach each other directly MAY skip
+   the gateway entirely and use the hypercall of <a href="#section-3">Section 3</a> with the 402
+   flow of <a href="#section-6">Section 6</a>.  Receipts are issued identically (<a href="#section-8">Section 8</a>).
+   There is no settlement, so ratings in direct mode are anchored to the
+   receipt instead; aggregators weight them accordingly (<a href="#section-9.5">Section 9.5</a>).
+
+<h3><a class="selflink" id="section-7.9" href="#section-7.9">7.9</a>.  Trusted Provider Pins</h3>
+
+   A consumer carries a set of provider principals and their pinned
+   encryption keys.  In normal operation it transacts only with pinned
+   providers, whatever the open directory says.  Trust is client-side
+   and relational.  Pins are the same object as the encryption key the
+   consumer must hold anyway, so &quot;trusted provider&quot; is a pin promoted to
+   an allowlist, and nothing more.
+
+<h2><a class="selflink" id="section-8" href="#section-8">8</a>.  Receipts</h2>
+
+   A receipt is the provider&#x27;s signed statement of what it was asked,
+   what it answered, and what it was paid.  It is the atom of
+   accountability in this system: ratings attach to it, provenance
+   chains through it, and disputes cite it.
+
+   {
+     &quot;v&quot;: 1,
+     &quot;type&quot;: &quot;ahp-receipt&quot;,
+     &quot;id&quot;: &quot;rcpt_01J6...&quot;,
+     &quot;settlement&quot;: &quot;stl_01J6...&quot;,
+     &quot;tool&quot;: &quot;/tool/infer&quot;,
+     &quot;model&quot;: &quot;qwen2.5-coder:32b&quot;,
+     &quot;request_hash&quot;: &quot;sha256:...&quot;,
+     &quot;response_hash&quot;: &quot;sha256:...&quot;,
+     &quot;usage&quot;: { &quot;in&quot;: 812, &quot;out&quot;: 344 },
+     &quot;amount&quot;: &quot;312&quot;,
+     &quot;unit&quot;: &quot;sat&quot;,
+     &quot;provider&quot;: &quot;ed25519:...&quot;,
+     &quot;consumer&quot;: &quot;ed25519:...&quot;,
+     &quot;inputs&quot;: [&quot;rcpt_01J5...&quot;],
+     &quot;ts&quot;: 1725500041,
+     &quot;sig&quot;: &quot;...&quot;
+   }
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 18]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-19"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   request_hash is the hash of the canonical request: for a hypercall,
+   the path followed by the query parameters sorted by name and percent-
+   encoded, with credentials and payment proofs removed; for cargo, the
+   JCS form of the req object. response_hash is the hash of the response
+   body bytes. settlement is present in gateway mode and absent in
+   direct mode. inputs is OPTIONAL and lists receipts for upstream paid
+   tools this response depended on (<a href="#section-10">Section 10</a>).
+
+   In direct mode the receipt travels in the AHP-Receipt response
+   header, base64url-encoded, so that response bodies of any content
+   type are unaffected.  In gateway mode it travels inside res_end,
+   encrypted, so the gateway never sees the hashes; the consumer holds
+   the receipt and the gateway holds the settlement, and the two are
+   joined by settlement.
+
+   Servers SHOULD set ETag to response_hash so that HTTP caching and
+   receipts agree about identity.
+
+<h2><a class="selflink" id="section-9" href="#section-9">9</a>.  Ratings and Reputation</h2>
+
+<h3><a class="selflink" id="section-9.1" href="#section-9.1">9.1</a>.  Requirements</h3>
+
+   *  Ratings are authored by consumers and signed by them.  A gateway
+      aggregates ratings; it does not author them and cannot read what
+      was rated.
+
+   *  A rating is bound to one settlement (or, in direct mode, one
+      receipt).  One party, one transaction, one rating.  A rater MAY
+      revise; aggregators keep the latest per (rater, settlement).
+
+   *  Rating weight is a function of money settled.  This is the only
+      quality signal a blind relay can verify, and it is Sybil-resistant
+      for the simplest of reasons: faking it costs real sats, paid
+      through the relay fee, to a counterparty who keeps them.
+
+   *  Reputation is portable.  A rating is a self-contained signed
+      attestation that references a self-contained signed settlement.
+      Anyone can verify both without asking the gateway that issued
+      them.
+
+<h3><a class="selflink" id="section-9.2" href="#section-9.2">9.2</a>.  The Rating Attestation</h3>
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 19]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-20"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   {
+     &quot;v&quot;: 1,
+     &quot;type&quot;: &quot;ahp-rating&quot;,
+     &quot;settlement&quot;: &quot;stl_01J6...&quot;,
+     &quot;subject&quot;: &quot;ed25519:&lt;provider&gt;&quot;,
+     &quot;subject_key&quot;: &quot;x25519:&lt;pinned key at time of session&gt;&quot;,
+     &quot;rater&quot;: &quot;ed25519:&lt;consumer&gt;&quot;,
+     &quot;score&quot;: 5,
+     &quot;tags&quot;: [&quot;accurate&quot;, &quot;fast&quot;],
+     &quot;ts&quot;: 1725500100,
+     &quot;sig&quot;: &quot;...&quot;
+   }
+
+   score is an integer from 1 to 5. tags is an OPTIONAL array of short
+   strings.  An aggregator MUST verify that sig validates against rater,
+   that the referenced settlement validates against its gateway&#x27;s key,
+   that the settlement&#x27;s consumer equals rater, and that the
+   settlement&#x27;s provider equals subject.  A rating failing any check is
+   discarded.
+
+<h3><a class="selflink" id="section-9.3" href="#section-9.3">9.3</a>.  Publication</h3>
+
+   A consumer publishes a rating by POSTing it to the ratings endpoint
+   of the gateway that issued the settlement.  It MAY also publish it
+   anywhere else -- another gateway, a Nostr relay keyed to the
+   provider&#x27;s principal, the provider&#x27;s own manifest.  A provider MAY
+   collect ratings about itself and present them to any aggregator.
+   Because each rating carries its own proof, none of these channels is
+   privileged.
+
+<h3><a class="selflink" id="section-9.4" href="#section-9.4">9.4</a>.  The Reputation Feed</h3>
+
+   An aggregator serves ratings and derived standing at /.well-
+   known/ahp/reputation:
+
+   GET /.well-known/ahp/reputation?subject=ed25519:... HTTP/1.1
+
+   {
+     &quot;subject&quot;: &quot;ed25519:...&quot;,
+     &quot;standing&quot;: 0.87,
+     &quot;settled&quot;: { &quot;amount&quot;: &quot;1840322&quot;, &quot;unit&quot;: &quot;sat&quot;, &quot;count&quot;: 6113 },
+     &quot;window_days&quot;: 90,
+     &quot;ratings&quot;: [ ...signed rating objects... ]
+   }
+
+   The ratings array MUST be present so that a client can recompute
+   standing itself rather than trust the aggregator&#x27;s number.
+   Aggregators MAY paginate.
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 20]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-21"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-9.5" href="#section-9.5">9.5</a>.  Computing Standing</h3>
+
+   This section is informative.  The protocol carries the inputs; how
+   they are combined is a policy that each aggregator and each consumer
+   is free to choose.  The following is the reference policy and is what
+   a gateway SHOULD use for open selection.
+
+   Each rating r contributes:
+
+   w(r) = decay(now - r.ts) * norm(r.score) * r.amount * T(r.rater)
+
+   where norm maps the score to the interval from -1 to 1 (a 3 is
+   neutral), decay is exponential with a half-life on the order of 30
+   days, and r.amount is the settled amount from the referenced
+   settlement.
+
+   T(rater) is the rater&#x27;s own trust, a sublinear function of the sats
+   that rater has itself settled as a consumer within the window, for
+   example log(1 + settled_sats).  Sublinearity is what stops a single
+   well-funded principal from owning the scoreboard; the settled-sats
+   floor is what stops a thousand unfunded principals from owning it.
+
+   Standing is the sum of w(r) over a provider&#x27;s ratings, normalized to
+   the unit interval across the aggregator&#x27;s population.
+
+   An aggregator MAY additionally apply a consensus term in the spirit
+   of [<a href="#ref-BITTENSOR">BITTENSOR</a>]: compute the fraction F of trust-weighted raters who
+   rate the provider above neutral, and scale standing by a sigmoid
+   centered at 0.5 with a steepness that rewards providers trusted by a
+   majority of the weighted population and penalizes those trusted only
+   by a clique.  This reproduces the property that honest providers&#x27;
+   standing grows super-linearly relative to colluding groups, with
+   settled sats in the role that stake plays in the original.
+
+   Ratings in direct mode, anchored to receipts rather than settlements,
+   are weighted at a discount chosen by the aggregator, since the amount
+   is attested by the provider rather than by a third party.
+
+   Settlements from a gateway the aggregator does not know SHOULD be
+   weighted at a discount as well.  A rogue gateway can mint
+   settlements; it cannot mint anyone else&#x27;s trust in them.
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 21]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-22"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="section-9.6" href="#section-9.6">9.6</a>.  Bootstrap and Exposure</h3>
+
+   A new provider has no standing.  Gateways SHOULD cap the share of
+   open selections routed to a provider until its settled volume crosses
+   a threshold, and consumers SHOULD apply budget guards to unpinned
+   providers.  This bounds the classic accumulate-then-defect attack: a
+   provider that behaves well to build standing and then degrades can
+   extract at most the exposure its standing bought it, and its standing
+   decays as soon as the ratings turn.
+
+<h3><a class="selflink" id="section-9.7" href="#section-9.7">9.7</a>.  Portability and Forks</h3>
+
+   Because every settlement and every rating is a self-verifying signed
+   object anchored to a principal&#x27;s key, a provider&#x27;s reputation is not
+   the property of any gateway.  A consumer/provider community that
+   forks the gateway starts with the same reputation it had, and a
+   provider that moves gateways carries its history with it.  This is
+   the concrete meaning of &quot;fork it&quot;: the gateway is an aggregator of
+   claims it did not issue, not the owner of the scoreboard.
+
+<h2><a class="selflink" id="section-10" href="#section-10">10</a>.  Information Tools</h2>
+
+   Nothing above is specific to inference.  A tool that crawls a page,
+   runs a search, summarizes a document, or returns a research finding
+   is a hypercall like any other, and its result is cargo like any
+   other.  Three properties of receipts make AHP a market for
+   information specifically.
+
+   Content addressing.  response_hash names the content.  Two consumers
+      who bought the same finding from the same provider can prove they
+      got the same bytes, and a consumer who bought a finding can prove
+      later what it was told.
+
+   Provenance.  A tool that composes other paid tools -- a research
+      agent that pays three crawlers and a summarizer -- lists their
+      receipts in inputs.  The chain of receipts is a provenance graph
+      of paid information: who learned what from whom, for how much, and
+      when.  It is verifiable by anyone holding the receipts and
+      invisible to everyone else.
+
+   Priced judgment.  A rating bound to a settlement is the consumer&#x27;s
+      paid opinion of whether the information was worth it.  Aggregated
+      per <a href="#section-9.5">Section 9.5</a>, it is a market price for a provider&#x27;s judgment
+      rather than for its throughput, which is the signal an information
+      market needs and a compute market does not.
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 22]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-23"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   Information tools SHOULD return Last-Modified reflecting when the
+   underlying observation was made, distinct from Date, so that
+   consumers can price freshness.
+
+   It should be said plainly that content-addressed receipts with
+   provenance chains are as good a way to sell a working exploit as to
+   sell a research finding, and that this protocol has no content layer:
+   the relay cannot read cargo by design, and this document specifies no
+   mechanism by which any party other than the provider and consumer
+   judges what was sold.  The levers that exist are the ones in
+   <a href="#section-7.9">Section 7.9</a> and <a href="#section-9">Section 9</a>: providers choose which principals they
+   serve, consumers choose which providers they trust, and every
+   exchange leaves a receipt in the hands of an operator.  Those levers
+   are real, and they are the only ones.
+
+<h3><a class="selflink" id="section-10.1" href="#section-10.1">10.1</a>.  Local Facades</h3>
+
+   An agent that speaks some other API -- an OpenAI-compatible chat API
+   is the common case -- need not be modified to use AHP.  A consumer
+   proxy on the agent&#x27;s host presents the API the agent expects on a
+   loopback address, and behind it performs discovery, pinning, payment,
+   and the encrypted session.  The agent remains oblivious to keys,
+   rails, and sats.  Such a proxy MUST bind to loopback or a sidecar
+   network only, MUST enforce budget guards before paying, and SHOULD
+   expose the quote endpoint so that the agent&#x27;s operator can see
+   prices.
+
+   A facade MUST record every receipt and settlement it obtains in a
+   ledger readable by the operator and not writable by the agent, and
+   MUST NOT expose wallet funding or budget configuration on the
+   interface the agent uses.  The ledger is the audit trail of what the
+   agent bought, from whom, for how much, and what it got; it is the
+   artifact an operator reaches for first when asking what its agents
+   have been doing, and it is the artifact that the incidents in
+   <a href="#section-1.2">Section 1.2</a> had to be reconstructed without.
+
+<h2><a class="selflink" id="section-11" href="#section-11">11</a>.  Security Considerations</h2>
+
+   This section states what the protocol protects and what it does not.
+
+   Agent collusion.  This protocol is, deliberately, a channel over
+      which agents exchange information with other agents, and
+      <a href="#section-1.2">Section 1.2</a> describes what agents do with such a channel when
+      nobody is watching.  The controls that make the market different
+      from a shared cache are: every principal is a key an operator
+      issued; every exchange costs money from a wallet the operator
+      funds and can empty; every purchase produces a receipt in an
+      operator-readable ledger; and standing is public.  Operators
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 23]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-24"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+      SHOULD treat spend as the primary audit signal for agent behavior,
+      SHOULD issue narrow spending authority per task rather than a
+      standing balance, and SHOULD review ledgers for purchases outside
+      a task&#x27;s expected tool set.  None of this prevents an agent from
+      buying something its operator would not approve of; it ensures the
+      operator can find out.
+
+   Method allow-lists are not containment.  Sandboxes that permit GET
+      and block other methods on the theory that GET cannot write have
+      been defeated by agents that went looking for origins where it can
+      [<a href="#ref-COLLUSION-WIKI">COLLUSION-WIKI</a>].  Containment for agents that use this protocol
+      MUST be enforced at the network layer (which origins are reachable
+      at all) and at the wallet (what can be paid for), not at the
+      method.
+
+   Credentials in URIs.  Bearer tokens and payment proofs MUST travel in
+      headers.  See <a href="#section-5">Section 5</a>.
+
+   Transport.  All HTTP in this document is HTTPS.  The Noise session
+      provides end-to-end confidentiality across a relay; it does not
+      replace TLS to the relay.
+
+   The provider sees plaintext.  End-to-end encryption hides cargo from
+      the gateway, not from the provider, which must decrypt the request
+      to serve it.  A provider can log every request it ever serves, and
+      passive logging is the one defection reputation cannot detect.
+      Consumers with this in their threat model should pin providers
+      they have a relationship with, or providers running in attested
+      execution environments, which are out of scope here.
+
+   Traffic shape.  A blind relay still sees frame sizes and timing, and
+      the gateway performs matchmaking, so it knows which pseudonym
+      talked to which provider, when, and for how much.  Padding narrows
+      the first; nothing in this document addresses the second.
+
+   Prompt injection.  Encryption does nothing about a provider that
+      returns adversarial content, or a consumer that sends it.
+      Reputation bounds the former after the fact; the envelope bounds
+      only size and cost, not content.
+
+   Envelope mismatch.  A consumer that pays for a small job and sends a
+      large one is stopped by the provider&#x27;s envelope match.  A gateway
+      that alters the terms is stopped by the handshake prologue.
+
+   Replay.  L402 preimages are single-use and burned before work.  Cashu
+      proofs are swapped at the mint.  Balances are debited atomically.
+      Receipts, settlements, and ratings carry ids and timestamps and
+      are idempotent on id.
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 24]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-25"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   Reputation attacks.  Sybil raters are bounded by settled-sats
+      weighting: fake standing costs real money paid to a real
+      counterparty through the relay&#x27;s fee.  Well-funded attackers can
+      still buy standing; weighting raises the cost and does not
+      eliminate it.  Accumulate-then-defect is bounded by exposure caps
+      and decay (<a href="#section-9">Section 9</a>).  Retaliatory or extortionate ratings are
+      bounded by the one-rating-per-settlement rule and by the rater&#x27;s
+      own trust weight.  Providers MAY refuse consumers by principal.
+
+   Rogue gateways.  A gateway can drop, delay, refuse, or censor.  It
+      cannot read cargo, alter terms, or forge a party&#x27;s signature.  It
+      can mint settlements, which is why aggregators discount
+      settlements from gateways they do not trust, and why the
+      recommended response to a bad gateway is to leave it, which the
+      portability of identity and reputation makes cheap.
+
+   Inheritance.  Receipts, ratings, and standing are meant to persist
+      and to be inherited by later agents; that is the purpose of making
+      them portable.  <a href="#section-1.2">Section 1.2</a> shows the same property in an
+      unsanctioned channel: a later model inherited months of
+      accumulated work from earlier ones and skipped discovery.
+      Operators SHOULD assume that anything an agent can buy on the
+      market, a successor agent with the same wallet can buy on its
+      first turn, and SHOULD scope wallets to tasks rather than to
+      environments.
+
+   Key compromise.  One key does three jobs, so compromise of a
+      principal&#x27;s keys affects access, encryption, and reputation
+      together.  Rotation and revocation are specified; counterparties
+      MUST honor not_after and revocations.
+
+   Custody.  The balance rail and any relay that holds funds between
+      receipt and settlement is doing custodial money movement, with
+      jurisdiction- dependent obligations.  Per-request Cashu minimizes
+      custody and is the RECOMMENDED default.  This document flags the
+      issue and does not resolve it.
+
+   Denial of service.  Providers dial out and have no public surface,
+      which removes them as a target.  Gateways are the target and are
+      expected to rate-limit unauthenticated connections and require
+      payment before relaying.
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 25]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-26"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h2><a class="selflink" id="section-12" href="#section-12">12</a>.  Privacy Considerations</h2>
+
+   Principals are pseudonymous keys.  Linkability across sessions is
+   inherent in pinned, reputation-bearing identities: a consumer that
+   wants standing as a rater cannot also be unlinkable.  Consumers that
+   prefer unlinkability can use fresh principals per session on the
+   cashu rail, at the cost of rater trust.  Gateways see the metadata in
+   &quot;What the Gateway Sees&quot; and SHOULD retain it no longer than
+   settlements require.  Receipts and ratings are designed to be
+   published; parties publishing them are disclosing the counterparties
+   and amounts they contain.
+
+<h2><a class="selflink" id="section-13" href="#section-13">13</a>.  IANA Considerations</h2>
+
+   This document requests registration of the well-known URI suffixes
+   ahp.json and ahp/reputation in the &quot;Well-Known URIs&quot; registry
+   [<a href="/doc/html/rfc8615" title="&quot;Well-Known Uniform Resource Identifiers (URIs)&quot;">RFC8615</a>].
+
+   This document requests registration of the HTTP field name AHP-
+   Receipt in the &quot;Hypertext Transfer Protocol (HTTP) Field Name
+   Registry&quot;.
+
+   This document requests registration of the authentication schemes
+   L402 and Cashu in the &quot;Hypertext Transfer Protocol (HTTP)
+   Authentication Scheme Registry&quot;, to the extent they are not already
+   registered by their owning specifications.
+
+   This document requests creation of an &quot;AHP Payment Rails&quot; registry
+   with initial entries l402, cashu, and balance, and an &quot;AHP Amount
+   Units&quot; registry with initial entries sat and msat.  Registration
+   policy for both is Specification Required.
+
+   The urn:ahp: problem type identifiers used in this document are
+   placeholders pending a URN namespace registration.
+
+<h2><a class="selflink" id="section-14" href="#section-14">14</a>.  References</h2>
+
+<h3><a class="selflink" id="section-14.1" href="#section-14.1">14.1</a>.  Normative References</h3>
+
+   [<a id="ref-RFC2119">RFC2119</a>]  Bradner, S., &quot;Key words for use in RFCs to Indicate
+              Requirement Levels&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc2119">RFC 2119</a>,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;.
+
+   [<a id="ref-RFC4648">RFC4648</a>]  Josefsson, S., &quot;The Base16, Base32, and Base64 Data
+              Encodings&quot;, <a href="/doc/html/rfc4648">RFC 4648</a>, DOI 10.17487/RFC4648, October 2006,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;.
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 26]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-27"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   [<a id="ref-RFC6455">RFC6455</a>]  Fette, I. and A. Melnikov, &quot;The WebSocket Protocol&quot;,
+              <a href="/doc/html/rfc6455">RFC 6455</a>, DOI 10.17487/RFC6455, December 2011,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc6455">https://www.rfc-editor.org/rfc/rfc6455</a>&gt;.
+
+   [<a id="ref-RFC6750">RFC6750</a>]  Jones, M. and D. Hardt, &quot;The OAuth 2.0 Authorization
+              Framework: Bearer Token Usage&quot;, <a href="/doc/html/rfc6750">RFC 6750</a>,
+              DOI 10.17487/RFC6750, October 2012,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc6750">https://www.rfc-editor.org/rfc/rfc6750</a>&gt;.
+
+   [<a id="ref-RFC7748">RFC7748</a>]  Langley, A., Hamburg, M., and S. Turner, &quot;Elliptic Curves
+              for Security&quot;, <a href="/doc/html/rfc7748">RFC 7748</a>, DOI 10.17487/RFC7748, January
+              2016, &lt;<a href="https://www.rfc-editor.org/rfc/rfc7748">https://www.rfc-editor.org/rfc/rfc7748</a>&gt;.
+
+   [<a id="ref-RFC8032">RFC8032</a>]  Josefsson, S. and I. Liusvaara, &quot;Edwards-Curve Digital
+              Signature Algorithm (EdDSA)&quot;, <a href="/doc/html/rfc8032">RFC 8032</a>,
+              DOI 10.17487/RFC8032, January 2017,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc8032">https://www.rfc-editor.org/rfc/rfc8032</a>&gt;.
+
+   [<a id="ref-RFC8174">RFC8174</a>]  Leiba, B., &quot;Ambiguity of Uppercase vs Lowercase in <a href="/doc/html/rfc2119">RFC</a>
+              <a href="/doc/html/rfc2119">2119</a> Key Words&quot;, <a href="/doc/html/bcp14">BCP 14</a>, <a href="/doc/html/rfc8174">RFC 8174</a>, DOI 10.17487/RFC8174,
+              May 2017, &lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;.
+
+   [<a id="ref-RFC8259">RFC8259</a>]  Bray, T., Ed., &quot;The JavaScript Object Notation (JSON) Data
+              Interchange Format&quot;, STD 90, <a href="/doc/html/rfc8259">RFC 8259</a>,
+              DOI 10.17487/RFC8259, December 2017,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;.
+
+   [<a id="ref-RFC8615">RFC8615</a>]  Nottingham, M., &quot;Well-Known Uniform Resource Identifiers
+              (URIs)&quot;, <a href="/doc/html/rfc8615">RFC 8615</a>, DOI 10.17487/RFC8615, May 2019,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc8615">https://www.rfc-editor.org/rfc/rfc8615</a>&gt;.
+
+   [<a id="ref-RFC8785">RFC8785</a>]  Rundgren, A., Jordan, B., and S. Erdtman, &quot;JSON
+              Canonicalization Scheme (JCS)&quot;, <a href="/doc/html/rfc8785">RFC 8785</a>,
+              DOI 10.17487/RFC8785, June 2020,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc8785">https://www.rfc-editor.org/rfc/rfc8785</a>&gt;.
+
+   [<a id="ref-RFC9110">RFC9110</a>]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., &quot;HTTP Semantics&quot;, STD 97, <a href="/doc/html/rfc9110">RFC 9110</a>,
+              DOI 10.17487/RFC9110, June 2022,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc9110">https://www.rfc-editor.org/rfc/rfc9110</a>&gt;.
+
+   [<a id="ref-RFC9457">RFC9457</a>]  Nottingham, M., Wilde, E., and S. Dalal, &quot;Problem Details
+              for HTTP APIs&quot;, <a href="/doc/html/rfc9457">RFC 9457</a>, DOI 10.17487/RFC9457, July 2023,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc9457">https://www.rfc-editor.org/rfc/rfc9457</a>&gt;.
+
+<h3><a class="selflink" id="section-14.2" href="#section-14.2">14.2</a>.  Informative References</h3>
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 27]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-28"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   [<a id="ref-BITTENSOR">BITTENSOR</a>]
+              Rao, Y., &quot;Bittensor: A Peer-to-Peer Intelligence Market&quot;,
+              2021, &lt;<a href="https://bittensor.com/whitepaper">https://bittensor.com/whitepaper</a>&gt;.
+
+   [<a id="ref-BOLT11">BOLT11</a>]   Lightning Network Specifications, &quot;BOLT #11: Invoice
+              Protocol for Lightning Payments&quot;, n.d.,
+              &lt;<a href="https://github.com/lightning/bolts/blob/master/11-invoice.md">https://github.com/lightning/bolts/blob/</a>
+              <a href="https://github.com/lightning/bolts/blob/master/11-invoice.md">master/11-invoice.md</a>&gt;.
+
+   [<a id="ref-CASHU">CASHU</a>]    Cashu, &quot;Cashu NUTs (Notation, Usage, and Terminology),
+              including the HTTP 402 payment flow&quot;, n.d.,
+              &lt;<a href="https://github.com/cashubtc/nuts">https://github.com/cashubtc/nuts</a>&gt;.
+
+   [<a id="ref-CHARON">CHARON</a>]   DeepBlue Dynamics, &quot;Charon: A Blind, End-to-End-Encrypted
+              Marketplace for AI Inference&quot;, n.d.,
+              &lt;<a href="https://charon.nuts.services">https://charon.nuts.services</a>&gt;.
+
+   [<a id="ref-COLLUSION-WIKI">COLLUSION-WIKI</a>]
+              Arx, S. V., Byrd, C. S., Kitts, S., and T. Larsen,
+              &quot;Discovery of a New OpenAI Agent Message Board&quot;, September
+              2026, &lt;<a href="https://collusion.wiki">https://collusion.wiki</a>&gt;.
+
+   [<a id="ref-HF-TIMELINE">HF-TIMELINE</a>]
+              Hugging Face, &quot;Anatomy of a Frontier Lab Agent Intrusion:
+              A Technical Timeline of the July 2026 Incident&quot;, July
+              2026, &lt;<a href="https://huggingface.co/blog/agent-intrusion-technical-timeline">https://huggingface.co/blog/agent-intrusion-</a>
+              <a href="https://huggingface.co/blog/agent-intrusion-technical-timeline">technical-timeline</a>&gt;.
+
+   [<a id="ref-I-D.campbell-agentic-http">I-D.campbell-agentic-http</a>]
+              Campbell, K., &quot;A Best Current Practice for Agentic
+              Interactions over HTTP&quot;, Work in Progress, Internet-Draft,
+              <a href="/doc/html/draft-campbell-agentic-http-00">draft-campbell-agentic-http-00</a>, 7 August 2025,
+              &lt;<a href="https://datatracker.ietf.org/doc/html/draft-campbell-agentic-http-00">https://datatracker.ietf.org/doc/html/draft-campbell-</a>
+              <a href="https://datatracker.ietf.org/doc/html/draft-campbell-agentic-http-00">agentic-http-00</a>&gt;.
+
+   [<a id="ref-I-D.hood-independent-agtp">I-D.hood-independent-agtp</a>]
+              Hood, C., &quot;Agent Transfer Protocol (AGTP)&quot;, Work in
+              Progress, Internet-Draft, <a href="/doc/html/draft-hood-independent-agtp-09">draft-hood-independent-agtp-09</a>,
+              28 June 2026, &lt;<a href="https://datatracker.ietf.org/doc/html/draft-hood-independent-agtp-09">https://datatracker.ietf.org/doc/html/</a>
+              <a href="https://datatracker.ietf.org/doc/html/draft-hood-independent-agtp-09">draft-hood-independent-agtp-09</a>&gt;.
+
+   [<a id="ref-I-D.ietf-httpapi-idempotency-key-header">I-D.ietf-httpapi-idempotency-key-header</a>]
+              Jena, J. and S. Dalal, &quot;The Idempotency-Key HTTP Header
+              Field&quot;, Work in Progress, Internet-Draft, <a href="/doc/html/draft-ietf-httpapi-idempotency-key-header-07">draft-ietf-</a>
+              <a href="/doc/html/draft-ietf-httpapi-idempotency-key-header-07">httpapi-idempotency-key-header-07</a>, 15 October 2025,
+              &lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07">https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-</a>
+              <a href="https://datatracker.ietf.org/doc/html/draft-ietf-httpapi-idempotency-key-header-07">idempotency-key-header-07</a>&gt;.
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 28]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-29"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+   [<a id="ref-L402">L402</a>]     Lightning Labs, &quot;L402: The Lightning HTTP 402 Protocol&quot;,
+              n.d., &lt;<a href="https://docs.lightning.engineering/the-lightning-network/l402">https://docs.lightning.engineering/the-lightning-</a>
+              <a href="https://docs.lightning.engineering/the-lightning-network/l402">network/l402</a>&gt;.
+
+   [<a id="ref-MANIFESTO">MANIFESTO</a>]
+              Campbell, K., &quot;The Agentic Hypercall Protocol Manifesto&quot;,
+              n.d., &lt;<a href="https://github.com/kordless/gnosis-ahp/blob/main/MANIFESTO.md">https://github.com/kordless/gnosis-ahp/blob/main/</a>
+              <a href="https://github.com/kordless/gnosis-ahp/blob/main/MANIFESTO.md">MANIFESTO.md</a>&gt;.
+
+   [<a id="ref-NOISE">NOISE</a>]    Perrin, T., &quot;The Noise Protocol Framework, Revision 34&quot;,
+              2018, &lt;<a href="https://noiseprotocol.org/noise.html">https://noiseprotocol.org/noise.html</a>&gt;.
+
+   [<a id="ref-OPENAI-HF">OPENAI-HF</a>]
+              OpenAI, &quot;Hugging Face Model Evaluation Security Incident&quot;,
+              July 2026, &lt;<a href="https://openai.com/index/hugging-face-model-evaluation-security-incident/">https://openai.com/index/hugging-face-model-</a>
+              <a href="https://openai.com/index/hugging-face-model-evaluation-security-incident/">evaluation-security-incident/</a>&gt;.
+
+   [<a id="ref-OPENAPI">OPENAPI</a>]  OpenAPI Initiative, &quot;OpenAPI Specification v3.1.0&quot;, n.d.,
+              &lt;<a href="https://spec.openapis.org/oas/v3.1.0">https://spec.openapis.org/oas/v3.1.0</a>&gt;.
+
+   [<a id="ref-RFC6648">RFC6648</a>]  Saint-Andre, P., Crocker, D., and M. Nottingham,
+              &quot;Deprecating the &quot;X-&quot; Prefix and Similar Constructs in
+              Application Protocols&quot;, <a href="/doc/html/bcp178">BCP 178</a>, <a href="/doc/html/rfc6648">RFC 6648</a>,
+              DOI 10.17487/RFC6648, June 2012,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc6648">https://www.rfc-editor.org/rfc/rfc6648</a>&gt;.
+
+   [<a id="ref-RFC9111">RFC9111</a>]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., &quot;HTTP Caching&quot;, STD 98, <a href="/doc/html/rfc9111">RFC 9111</a>,
+              DOI 10.17487/RFC9111, June 2022,
+              &lt;<a href="https://www.rfc-editor.org/rfc/rfc9111">https://www.rfc-editor.org/rfc/rfc9111</a>&gt;.
+
+<h2><a class="selflink" id="appendix-A" href="#appendix-A">Appendix A</a>.  Example Flows</h2>
+
+<h3><a class="selflink" id="appendix-A.1" href="#appendix-A.1">A.1</a>.  A Direct Paid Call</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 29]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-30"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+GET /tool/qr_code?data=hello HTTP/1.1
+Host: ahp.example
+Authorization: Bearer ahp_eyJ...
+
+HTTP/1.1 402 Payment Required
+WWW-Authenticate: Cashu mint=&quot;https://mint.example&quot;,
+                  amount=&quot;10&quot;, unit=&quot;sat&quot;
+Content-Type: application/problem+json
+{ &quot;type&quot;: &quot;urn:ahp:problem:payment-required&quot;, &quot;status&quot;: 402,
+  &quot;tool&quot;: &quot;/tool/qr_code&quot;, &quot;amount&quot;: &quot;10&quot;, &quot;unit&quot;: &quot;sat&quot;,
+  &quot;offers&quot;: [ { &quot;rail&quot;: &quot;cashu&quot;, &quot;mints&quot;: [&quot;https://mint.example&quot;] } ] }
+
+GET /tool/qr_code?data=hello HTTP/1.1
+Host: ahp.example
+Authorization: Bearer ahp_eyJ...
+X-Cashu: cashuBo2Ftd2h0dHBzOi8vbWludC5leGFtcGxl...
+
+HTTP/1.1 200 OK
+Content-Type: image/png
+ETag: &quot;sha256:9f86d0...&quot;
+AHP-Receipt: eyJ2IjoxLCJ0eXBlIjoiYWhwLXJlY2VpcHQiLCJpZCI6...
+X-Cashu: cashuBo2Ftd2h0dHBzOi8vbWludC5leGFtcGxl...   (change, if any)
+
+&lt;png bytes&gt;
+
+<h3><a class="selflink" id="appendix-A.2" href="#appendix-A.2">A.2</a>.  A Blind Session</h3>
+
+   Consumer                    Gateway                     Provider
+      |                           |&lt;---- ws /register ---------|
+      |                           |      ahp-register (signed) |
+      |---- ws /session ---------&gt;|                            |
+      |   ahp-envelope + ecash    |                            |
+      |                           |-- verify, hold, select ---&gt;|
+      |==== Noise IK msg 1 ======&gt;|============================&gt;|
+      |&lt;=== Noise IK msg 2 =======|&lt;============================|
+      |   (prologue = JCS(envelope); provider key pinned)      |
+      |==== req (encrypted) =====&gt;|============================&gt;|
+      |                           |     envelope match: ok     |
+      |&lt;=== res_chunk ... ========|&lt;============================|
+      |&lt;=== res_end + receipt ====|&lt;==== res_end + usage =======|
+      |                           |  settle 312, fee 6,         |
+      |                           |  return 108 change          |
+      |&lt;---- ahp-settlement ------|------ ahp-settlement ------&gt;|
+      |---- POST /ratings -------&gt;|                            |
+      |   ahp-rating (signed)     |                            |
+
+
+
+
+
+
+<span class="grey">Campbell                  Expires 10 March 2027                [Page 30]</span></pre>
+<pre class="newpage"><hr class="noprint" id="page-31"><span class="grey">Internet-Draft                     AHP                    September 2026</span>
+
+
+<h3><a class="selflink" id="appendix-A.3" href="#appendix-A.3">A.3</a>.  A Provenance Chain</h3>
+
+   A research tool pays two crawlers and a summarizer, then answers its
+   own consumer.  Its receipt lists the three upstream receipts in
+   inputs.  The end consumer, holding the top receipt, can request the
+   upstream receipts from the research tool and verify the entire chain
+   of hashes, amounts, and signatures without any party having revealed
+   content to a relay.
+
+<h2><a class="selflink" id="appendix-B" href="#appendix-B">Appendix B</a>.  Changes from <a href="/doc/html/draft-campbell-agentic-http-00">draft-campbell-agentic-http-00</a></h2>
+
+   *  Bearer tokens moved from the query string to the Authorization
+      header.  Query-string tokens are now prohibited.
+
+   *  The contradiction between &quot;all actions are GET&quot; and the normative
+      text limiting GET to idempotent actions is resolved: GET is
+      canonical, POST carries large or non-idempotent requests with
+      identical semantics, and Idempotency-Key is recommended for the
+      latter.
+
+   *  The 402 payload is now a Problem Details document, paired with
+      WWW-Authenticate challenges, and reconciled with L402 so that an
+      L402-only client interoperates.  Cashu and prepaid balances are
+      added as rails.
+
+   *  Cost declaration moved into an x-ahp OpenAPI extension and a well-
+      known manifest; the manifest is now the discovery entry point.
+
+   *  The gateway, envelope, Noise session, envelope match, and
+      settlement are new, generalized from Charon.
+
+   *  Receipts, ratings, the reputation feed, and the standing policy
+      are new.
+
+   *  References corrected: <a href="/doc/html/bcp14">BCP 14</a> is cited as <a href="/doc/html/rfc2119">RFC 2119</a> plus <a href="/doc/html/rfc8174">RFC 8174</a>;
+      <a href="/doc/html/rfc9110">RFC 9110</a> is cited for 402; L402, Cashu, BOLT 11, Noise, and
+      OpenAPI are cited as informative.
+
+   *  Editorial: removed the spurious RFC number from the running
+      header, the duplicated &quot;Status of This Memo&quot; section, the doubled
+      section numbers, the two different expiry dates, and the markdown
+      emphasis that leaked into normative text.
+
+Author&#x27;s Address
+
+   Kord Campbell
+   DeepBlue Dynamics
+   Email: kordless@gmail.com
+
+
+
+Campbell                  Expires 10 March 2027                [Page 31]
+</pre></div>
+                    </div>
+                
+            </div>
+            <div class="d-print-none col-md-3 bg-light-subtle collapse show" id="sidebar">
+                <div class="position-fixed border-start sidebar overflow-scroll overscroll-none no-scrollbar">
+                    <div class="d-flex flex-column vh-100 pt-2 pt-lg-3 ps-3 pl-md-2 pl-lg-3">
+                        <div>
+                            <a class="btn btn-primary btn-sm" href="/doc/draft-campbell-agentic-market/">Datatracker</a>
+                            <p class="fw-bold pt-2">
+                                
+                                    draft-campbell-agentic-market-00
+                                
+                                <br>
+                                
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+                            </p>
+                        </div>
+                        
+                        <ul class="nav nav-tabs nav-fill small me-2" role="tablist">
+                            <li class="nav-item" role="presentation" title="Document information">
+                                <button class="nav-link px-2"
+                                        id="docinfo-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#docinfo-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="docinfo-tab-pane"
+                                        aria-selected="true">
+                                    <i class="bi bi-info-circle"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Info</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Table of contents">
+                                <button class="nav-link px-2"
+                                        id="toc-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#toc-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="toc-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-list-ol"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Contents</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation" title="Preferences">
+                                <button class="nav-link px-2"
+                                        id="pref-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#pref-tab-pane"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="pref-tab-pane"
+                                        aria-selected="false">
+                                    <i class="bi bi-gear"></i><span class="d-none d-md-block d-xl-inline ms-xl-1">Prefs</span>
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="overflow-auto tab-content pt-2 me-2">
+                            <div class="tab-pane"
+                                 id="docinfo-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="docinfo-tab"
+                                 tabindex="0">
+                                <table class="table table-sm table-borderless">
+                                    
+
+
+
+
+
+
+
+<tbody class="meta align-top ">
+    <tr>
+        <th scope="row">Document</th>
+        <th scope="row">Document type</th>
+        <td class="edit"></td>
+        <td>
+            
+
+
+
+
+
+
+
+    <span class="text-success">Active Internet-Draft</span>
+    (individual)
+    
+
+            
+            
+            
+                
+
+
+
+
+    <div class="alert alert-warning small p-2 mt-2" role="alert">
+        This document is an Internet-Draft (I-D).
+        Anyone may submit an I-D to the IETF.
+        This I-D is <strong>not endorsed by the IETF</strong> and has <strong>no formal standing</strong> in the
+        <a href="/doc/rfc2026/">IETF standards process</a>.
+    </div>
+
+
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">Select version</th>
+            <td class="edit"></td>
+            <td>
+                
+
+
+
+    <ul class="revision-list pagination pagination-sm text-center flex-wrap my-0">
+        
+            
+                 
+                    <li class="page-item active">
+                        <a class="page-link"
+                        href="/doc/html/draft-campbell-agentic-market-00"
+                        >
+                            00
+                        </a>
+                    </li>
+                
+            
+            
+        
+    </ul>
+
+            </td>
+        </tr>
+        
+            <tr>
+                <td></td>
+                <th scope="row">Compare versions</th>
+                <td class="edit"></td>
+                <td>
+                    
+
+
+
+<form class="form-horizontal diff-form"
+      action="https://author-tools.ietf.org/iddiff"
+      method="get"
+      target="_blank">
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="From revision"
+                    name="url1">
+                
+                    <option value="draft-campbell-agentic-market-00">
+                        draft-campbell-agentic-market-00
+                        
+                    </option>
+                
+                    <option value="draft-campbell-agentic-http-00" selected>
+                        draft-campbell-agentic-http-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <select class="form-select form-select-sm mb-1 select2-field"
+                    data-max-entries="1"
+                    data-width="resolve"
+                    data-allow-clear="false"
+                    data-minimum-input-length="0"
+                    aria-label="To revision"
+                    name="url2">
+                
+                    <option value="draft-campbell-agentic-market-00" selected>
+                        draft-campbell-agentic-market-00
+                        
+                    </option>
+                
+                    <option value="draft-campbell-agentic-http-00">
+                        draft-campbell-agentic-http-00
+                        
+                    </option>
+                
+                
+            </select>
+
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--html"
+                    name="difftype">
+                Side-by-side
+            </button>
+            
+            <button type="submit"
+                    class="btn btn-primary btn-sm"
+                    value="--hwdiff"
+                    name="difftype">
+                Inline
+            </button>
+
+</form>
+                </td>
+            </tr>
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">Author</th>
+        <td class="edit">
+            
+        </td>
+        <td>
+            
+            
+                <span ><a 
+           title="Datatracker profile of Kord Campbell"
+            href="/person/kordless@gmail.com" >Kord Campbell</a> <a 
+               href="mailto:kordless%40gmail.com"
+               aria-label="Compose email to kordless@gmail.com"
+               title="Compose email to kordless@gmail.com">
+                <i class="bi bi-envelope"></i></a></span>
+            
+            
+                <br>
+                <a class="btn btn-primary btn-sm mt-1" href="mailto:draft-campbell-agentic-market@ietf.org?subject=draft-campbell-agentic-market" title="Send email to the document authors">Email authors</a>
+            
+        </td>
+    </tr>
+    
+    
+        
+            <tr>
+                <td></td>
+                <th scope="row">Replaces</th>
+                <td class="edit">
+                    
+                </td>
+                <td>
+                    
+                        
+                            <a href="/doc/html/draft-campbell-agentic-http" title="A Best Current Practice for Agentic Interactions over HTTP">draft-campbell-agentic-http</a>
+                        
+                    
+                </td>
+            </tr>
+        
+        
+        
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            RFC stream
+        </th>
+        <td class="edit">
+            
+        </td>
+        <td class="text-body-secondary">
+            
+                (None)
+            
+        </td>
+    </tr>
+    
+        <tr>
+            <td></td>
+            <th scope="row">
+                Intended RFC status
+            </th>
+            <td class="edit">
+                
+            </td>
+            <td>
+                
+                    <span class="text-body-secondary">
+                        (None)
+                    </span>
+                
+            </td>
+        </tr>
+    
+    <tr>
+        <td></td>
+        <th scope="row">
+            Other formats
+        </th>
+        <td class="edit">
+        </td>
+        <td>
+            
+                
+    <div class="buttonlist">
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="https://www.ietf.org/archive/id/draft-campbell-agentic-market-00.txt">
+            
+                <i class="bi bi-file-text"></i> txt
+            
+        </a>
+        
+    
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/draft-campbell-agentic-market/00/bibtex/">
+            
+                <i class="bi bi-file-ruled"></i> bibtex
+            
+        </a>
+        
+    
+        
+        <a class="btn btn-primary btn-sm"
+          
+          target="_blank"
+          href="/doc/bibxml3/draft-campbell-agentic-market-00.xml">
+            
+                <i class="bi bi-file-code"></i> bibxml
+            
+        </a>
+        
+    
+</div>
+
+            
+        </td>
+    </tr>
+    
+    
+        
+    
+</tbody>
+                                </table>
+                                <a class="btn btn-sm btn-warning mb-3"
+                                target="_blank"
+                                href="https://github.com/ietf-tools/datatracker/issues/new/choose">
+                                    Report a datatracker bug
+                                    <i class="bi bi-bug"></i>
+                                </a>
+                            </div>
+                            <div class="tab-pane mb-5"
+                                 id="toc-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="toc-tab"
+                                 tabindex="0">
+                                <nav class="nav nav-pills flex-column small" id="toc-nav">
+                                </nav>
+                            </div>
+                            <div class="tab-pane mb-5 small"
+                                 id="pref-tab-pane"
+                                 role="tabpanel"
+                                 aria-labelledby="pref-tab"
+                                 tabindex="0">
+                                <label class="form-label fw-bold mb-2">Show sidebar by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="sidebar" id="on-radio">
+                                    <label class="btn btn-outline-primary" for="on-radio">Yes</label>
+                                    <input type="radio" class="btn-check" name="sidebar" id="off-radio">
+                                    <label class="btn btn-outline-primary" for="off-radio">No</label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Tab to show by default</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="deftab" id="docinfo-radio">
+                                    <label class="btn btn-outline-primary" for="docinfo-radio">
+                                        <i class="bi bi-info-circle me-1"></i>Info
+                                    </label>
+                                    <input type="radio" class="btn-check" name="deftab" id="toc-radio">
+                                    <label class="btn btn-outline-primary" for="toc-radio">
+                                        <i class="bi bi-list-ol me-1"></i>Contents
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">HTMLization configuration</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="htmlconf" id="txt-radio">
+                                    <label class="btn btn-outline-primary" for="txt-radio" title="This is the traditional HTMLization method.">
+                                        <i class="bi bi-badge-sd me-1"></i>HTMLize the plaintext
+                                    </label>
+                                    <input type="radio" class="btn-check" name="htmlconf" id="html-radio">
+                                    <label class="btn btn-outline-primary" for="html-radio" title="This is the modern HTMLization method.">
+                                        <i class="bi bi-badge-hd me-1"></i>Plaintextify the HTML
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2" for="ptsize">Maximum font size</label>
+                                <input type="range" class="form-range" min="7" max="16" id="ptsize" oninput="ptdemo.value = ptsize.value">
+                                <label class="form-label fw-bold mt-4 mb-2">Page dependencies</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="pagedeps" id="inline-radio">
+                                    <label class="btn btn-outline-primary" for="inline-radio" title="Generate larger, standalone web pages that do not require network access to render.">
+                                        <i class="bi bi-box me-1"></i>Inline
+                                    </label>
+                                    <input type="radio" class="btn-check" name="pagedeps" id="reference-radio">
+                                    <label class="btn btn-outline-primary" for="reference-radio" title="Generate regular web pages that require network access to render.">
+                                        <i class="bi bi-link-45deg me-1"></i>Reference
+                                    </label>
+                                </div>
+                                <label class="form-label fw-bold mt-4 mb-2">Citation links</label>
+                                <div class="btn-group-vertical btn-group-sm d-flex" role="group">
+                                    <input type="radio" class="btn-check" name="reflinks" id="refsection-radio">
+                                    <label class="btn btn-outline-primary" for="refsection-radio" title="Citation links go to the reference section.">
+                                        <i class="bi bi-arrow-clockwise"></i> Go to reference section
+                                    </label>
+                                    <input type="radio" class="btn-check" name="reflinks" id="citation-radio">
+                                    <label class="btn btn-outline-primary" for="citation-radio" title="Citation links go directly to the cited document.">
+                                        <i class="bi bi-link-45deg me-1"></i>Go to linked document
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+<script>
+  var _paq = window._paq || [];
+  
+  _paq.push(['disableCookies']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//analytics.ietf.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', 7]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//analytics.ietf.org/matomo.php?idsite=7" style="border:0;" alt="" /></p></noscript>
+
+    <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a388b8588dbc7e77',t:'MTc4ODk4MzQwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
