@@ -1,8 +1,14 @@
 from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
 from ..config import settings
 from ..models import AhpManifest, AhpKeys, AhpGatewayEndpoints
 
 router = APIRouter(tags=["manifest"])
+
+@router.get("/", include_in_schema=False)
+async def root_index():
+    """Redirect root to interactive API documentation."""
+    return RedirectResponse(url="/docs")
 
 # Gateway public principal key (ed25519)
 GATEWAY_PRINCIPAL = "ed25519:obol_gateway_master_key_ahp_2026"
