@@ -90,6 +90,7 @@ class AttachmentMetadata(BaseModel):
     uploader_principal: str
     created_at: int = Field(default_factory=lambda: int(time.time()))
     download_url: str = ""
+    gcs_uri: Optional[str] = None
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 # --- Message Models ---

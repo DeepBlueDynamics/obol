@@ -7,5 +7,6 @@ cryptography>=43.0.0
 pyjwt[crypto]>=2.9.0
 python-multipart>=0.0.9
 fastmcp>=2.0.0
+google-cloud-storage>=3.0.0
 websockets>=13.0
 aiofiles>=24.1.0

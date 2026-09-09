@@ -22,7 +22,10 @@ class Settings(BaseSettings):
     auth_exchange_url: str = os.getenv("AUTH_EXCHANGE_URL", "https://auth.nuts.services/auth")
     disable_auth_for_local_dev: bool = os.getenv("DISABLE_AUTH", "false").lower() in ("true", "1", "yes")
     
-    # Storage Paths
+    # Storage & GCS (Google Cloud Storage)
+    gcs_bucket_name: str = os.getenv("GCS_BUCKET_NAME", "gnosis-459403-obol")
+    gcp_project_id: str = os.getenv("GCP_PROJECT", "gnosis-459403")
+    use_cloud_storage: bool = os.getenv("USE_CLOUD_STORAGE", "true").lower() in ("true", "1", "yes")
     storage_dir: Path = Path(os.getenv("STORAGE_DIR", str(Path(__file__).parent.parent / "storage")))
     attachments_dir: Path = Path(os.getenv("ATTACHMENTS_DIR", str(Path(__file__).parent.parent / "storage" / "attachments")))
     

@@ -25,6 +25,22 @@ class ObolStorage:
         
         self._ensure_files()
 
+        # Google Cloud Storage client initialization
+        self._gcs_client = None
+        self._gcs_bucket = None
+        self._init_gcs()
+
+    def _init_gcs(self):
+        if not settings.use_cloud_storage:
+            return
+        try:
+            from google.cloud import storage as gcs_module
+            self._gcs_client = gcs_module.Client(project=settings.gcp_project_id)
+            self._gcs_bucket = self._gcs_client.bucket(settings.gcs_bucket_name)
+        except Exception:
+            self._gcs_client = None
+            self._gcs_bucket = None
+
     def _ensure_files(self):
         self.storage_dir.mkdir(parents=True, exist_ok=True)
         self.attachments_dir.mkdir(parents=True, exist_ok=True)
@@ -103,6 +119,16 @@ class ObolStorage:
         blob_path = self.attachments_dir / sha256
         blob_path.write_bytes(content_bytes)
 
+        gcs_uri = None
+        if self._gcs_bucket:
+            try:
+                gcs_blob_name = f"attachments/{sha256}"
+                blob = self._gcs_bucket.blob(gcs_blob_name)
+                blob.upload_from_string(content_bytes, content_type=content_type)
+                gcs_uri = f"gs://{settings.gcs_bucket_name}/{gcs_blob_name}"
+            except Exception:
+                pass
+
         meta = AttachmentMetadata(
             filename=filename,
             content_type=content_type,
@@ -110,6 +136,7 @@ class ObolStorage:
             sha256_hash=sha256,
             uploader_principal=uploader_principal,
             download_url=f"/api/v1/attachments/{sha256}/download",
+            gcs_uri=gcs_uri,
             metadata=metadata or {}
         )
 
@@ -130,14 +157,23 @@ class ObolStorage:
 
     def get_attachment_bytes(self, sha256_or_id: str) -> Optional[bytes]:
         meta = self.get_attachment_metadata(sha256_or_id)
-        if meta:
-            blob_path = self.attachments_dir / meta.sha256_hash
-            if blob_path.exists():
-                return blob_path.read_bytes()
-        # Fallback: check if the key is directly the sha256 hash
-        blob_path = self.attachments_dir / sha256_or_id
+        sha256 = meta.sha256_hash if meta else sha256_or_id
+        
+        # 1. Try local cache
+        blob_path = self.attachments_dir / sha256
         if blob_path.exists():
             return blob_path.read_bytes()
+            
+        # 2. Try GCS if available
+        if self._gcs_bucket:
+            try:
+                blob = self._gcs_bucket.blob(f"attachments/{sha256}")
+                if blob.exists():
+                    data = blob.download_as_bytes()
+                    blob_path.write_bytes(data)
+                    return data
+            except Exception:
+                pass
         return None
 
     # --- Messages ---
