@@ -271,3 +271,27 @@ def test_ahp_hypercall_and_receipts():
     assert ledger_res.status_code == 200
     summary = ledger_res.json()
     assert summary["transaction_count"] >= 1
+
+
+def test_landing_page_and_assets():
+    """Verify landing page, meta tags, and static brand assets."""
+    # Test Root Landing Page
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.text
+    assert "NUTS.SERVICES" in html
+    assert "twitter:card" in html
+    assert "twitter:image" in html
+    assert "og:image" in html
+    assert "favicon.svg" in html
+    assert "https://auth.nuts.services/login" in html
+    assert "https://auth.nuts.services/dashboard" in html
+    assert "https://github.com/DeepBlueDynamics/obol" in html
+    assert "DeepBlue Dynamics, LLC" in html
+
+    # Test Favicons and OG Preview Asset Routes
+    for path in ["/favicon.ico", "/favicon.svg", "/favicon.png", "/apple-touch-icon.png", "/og-preview.png"]:
+        asset_res = client.get(path)
+        assert asset_res.status_code == 200
+        assert len(asset_res.content) > 0
+

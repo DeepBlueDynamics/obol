@@ -1,9 +1,14 @@
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.openapi.utils import get_openapi
 from .config import settings
 from .routes import manifest, agents, tools, messages, attachments, fiscal
 from .storage import storage
+
+STATIC_DIR = Path(__file__).parent / "static"
 
 app = FastAPI(
     title=settings.app_title,
@@ -19,6 +24,50 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount static files
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+
+# Favicon & OpenGraph assets matching nuts.services fleet
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon_ico():
+    target = STATIC_DIR / "favicon.ico"
+    if target.exists():
+        return FileResponse(target, media_type="image/x-icon")
+    return FileResponse(STATIC_DIR / "favicon.svg", media_type="image/svg+xml")
+
+
+@app.get("/favicon.svg", include_in_schema=False)
+async def favicon_svg():
+    return FileResponse(STATIC_DIR / "favicon.svg", media_type="image/svg+xml")
+
+
+@app.get("/favicon.png", include_in_schema=False)
+async def favicon_png():
+    return FileResponse(STATIC_DIR / "favicon.png", media_type="image/png")
+
+
+@app.get("/favicon-192.png", include_in_schema=False)
+async def favicon_192():
+    return FileResponse(STATIC_DIR / "favicon-192.png", media_type="image/png")
+
+
+@app.get("/favicon-512.png", include_in_schema=False)
+async def favicon_512():
+    return FileResponse(STATIC_DIR / "favicon-512.png", media_type="image/png")
+
+
+@app.get("/apple-touch-icon.png", include_in_schema=False)
+async def apple_touch_icon():
+    return FileResponse(STATIC_DIR / "apple-touch-icon.png", media_type="image/png")
+
+
+@app.get("/og-preview.png", include_in_schema=False)
+async def og_preview():
+    return FileResponse(STATIC_DIR / "og-preview.png", media_type="image/png")
+
 
 # Include Routers
 app.include_router(manifest.router)
