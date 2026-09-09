@@ -1,0 +1,1 @@
+mcp_tools = ["blender", "discord.py", "hyperia", "hyperia-mcp.py", "meridian-mcp.py", "obol_mcp.py"]
